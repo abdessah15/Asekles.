@@ -8,7 +8,7 @@
     <!-- Favicon -->
     <link rel="icon" href="temp_segment_66d5163aa9dbf.png" type="temp_segment_66d5163aa9dbf.png">
     
-   <style>
+    <style>
         /* Styles de base */
         body {
             margin: 0;
@@ -78,12 +78,16 @@
             justify-content: center;
         }
 
+        .nav-active {
+            display: flex;
+        }
+
         /* Contenu principal */
         .content {
             padding: 20px;
         }
 
-        /* Grille des films responsive */
+        /* Grille des séries responsive */
         .movie-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Ajustement automatique */
@@ -228,9 +232,14 @@
 <body>
     <header>
         <h1>ⵣ Asekles ⵣ</h1>
+        <div id="menu-icon" class="menu-icon">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
     </header>
 
-    <nav>
+    <nav id="nav-links" class="nav-links">
         <a href="index.html">Accueil</a>
         <a href="films.html">Films</a>
         <a href="series.html">Séries</a>
@@ -243,43 +252,37 @@
             <!-- Série 1 avec lien vers une nouvelle page -->
             <div class="movie-item">
                 <a href="film4.html">
-                    <img src="Sans titre4.jpg">
+                    <img src="Sans titre4.jpg" alt="Waɛli ak d tzizwit">
                     <h3>Waɛli ak d tzizwit</h3>
                 </a>
             </div>
             <!-- Série 2 avec lien vers une nouvelle page -->
             <div class="movie-item">
                 <a href="film5.html">
-                    <img src="Sans titre5.jpg">
+                    <img src="Sans titre5.jpg" alt="zorro">
                     <h3>zorro</h3>
                 </a>
             </div>
             <!-- Série 3 avec lien vers une nouvelle page -->
             <div class="movie-item">
                 <a href="film6.html">
-                    <img src="Sans titre6.jpg">
+                    <img src="Sans titre6.jpg" alt="maca ak d micka">
                     <h3>maca ak d micka</h3>
-             
-                 
                 </a>
             </div>
-            <!-- Série 3 avec lien vers une nouvelle page -->
+            <!-- Série 4 avec lien vers une nouvelle page -->
             <div class="movie-item">
                 <a href="film7.html">
-                    <img src="Sans titre11.jpg">  
-                  <h3>Tom et Jerry à New York</h3>      
+                    <img src="Sans titre11.jpg" alt="Tom et Jerry à New York">
+                    <h3>Tom et Jerry à New York</h3>
                 </a>
             </div>
+       
+    <footer>
+        <p>&copy; 2024 Asekles.com. Tous droits réservés.</p>
+    </footer>
 
-            <div class="footer-space"></div>
-            <div class="footer-space"></div>
-            <div class="footer-space"></div>
-            <div class="footer-space"></div>
-            <footer>
-                <p>&copy; 2024 Asekles.com. Tous droits réservés.</p>
-            </footer>
-            
-             <script>
+    <script>
         // Script pour le menu hamburger
         const menuIcon = document.getElementById('menu-icon');
         const navLinks = document.getElementById('nav-links');
