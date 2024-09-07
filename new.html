@@ -1,248 +1,162 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visionnage de Série - Asekles</title>
+    <title>Nouveautés - Asekles</title>
 
     <!-- Favicon -->
     <link rel="icon" href="temp_segment_66d5163aa9dbf.png" type="temp_segment_66d5163aa9dbf.png">
-    
+
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d0d0d;
-            color: #f5f5f5;
-            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1c; /* Fond sombre */
+            color: #f1f1f1; /* Texte clair */
+            padding-bottom: 60px; /* Espace réservé pour le pied de page */
         }
 
-        .header {
-            background-color: #e50914;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
-        }
-
-        .header h1 {
-            margin: 0;
-            color: #fff;
-            font-size: 2em;
-            letter-spacing: 1px;
-        }
-
-        .header .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 20px;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        .header .nav-links a:hover {
-            color: #ffd700;
-        }
-
-        .container {
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .film-info {
-            max-width: 1000px;
-            width: 100%;
-            background-color: #1e1e1e;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-            margin-bottom: 30px;
-            color: #f5f5f5;
-            position: relative;
-        }
-
-        .film-info h2 {
-            margin: 0 0 15px;
-            color: #e50914;
-            font-size: 1.8em;
-        }
-
-        .film-info p {
-            margin: 10px 0;
-            font-size: 1.2em;
-        }
-
-        .video-container {
-            width: 100%;
-            max-width: 1000px;
-            position: relative;
-            background-color: #000;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-            margin-bottom: 30px;
-        }
-
-        .episode-list {
-            max-width: 1000px;
-            width: 100%;
-            background-color: #1e1e1e;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-            margin-bottom: 30px;
-            color: #f5f5f5;
-        }
-
-        .episode-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: #2a2a2a;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            position: relative;
-        }
-
-        .episode-item:hover {
-            background-color: #333;
-            transform: scale(1.02);
-        }
-
-        .episode-item h3 {
-            margin: 0;
-            color: #e50914;
-            font-size: 1.3em;
-        }
-
-        .actions-container {
+        header {
+            background-color: #e50914; /* Rouge vif */
+            padding: 20px;
             text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
-        .actions-container button {
-            background-color: #e50914;
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
+            header h1 {
+                margin: 0;
+                font-size: 2.5em;
+                color: #fff;
+            }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background-color: #333; /* Gris foncé */
+        }
+
+            nav a {
+                color: #fff;
+                margin: 0 15px;
+                text-decoration: none;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+                nav a:hover {
+                    text-decoration: underline;
+                }
+
+        .content {
+            padding: 20px;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-item {
+            background-color: #2a2a2a; /* Gris très foncé */
+            padding: 15px;
             border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 15px;
-            transition: background-color 0.3s, transform 0.3s;
-            font-size: 1.2em;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .actions-container button:hover {
-            background-color: #a10000;
-            transform: scale(1.05);
-        }
+            .movie-item:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            }
 
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: #e50914;
-            color: #fff;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-size: 1.5em;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            z-index: 1000;
-        }
+            .movie-item img {
+                width: 100%;
+                border-radius: 10px;
+            }
 
-        .back-button:hover {
-            background-color: #a10000;
-            transform: scale(1.05);
-        }
+            .movie-item h3 {
+                margin-top: 10px;
+                font-size: 1.2em;
+                color: #e50914; /* Rouge vif pour le titre */
+                cursor: pointer;
+            }
+
+                .movie-item h3:hover {
+                    text-decoration: underline;
+                }
 
         footer {
-            background-color: #333;
-            color: #f5f5f5;
+            background-color: #333; /* Gris foncé */
+            color: #f1f1f1;
             text-align: center;
-            padding: 15px;
-            position: relative;
+            padding: 10px;
+            position: fixed;
             bottom: 0;
+            left: 0;
             width: 100%;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Ajoute un espace pour le pied de page */
+        .footer-space {
+            height: 60px;
         }
     </style>
 </head>
-
 <body>
-
-    <header class="header">
-        <h1>Asekles.com</h1>
-        <div class="nav-links">
-            <a href="index.html">Accueil</a>
-            <a href="films.html">Films</a>
-            <a href="series.html">Séries</a>
-            <a href="new.html">Nouveautés</a>
-        </div>
+    <header>
+        <h1>ⵣ Nouveautés ⵣ</h1>
     </header>
 
-    <button class="back-button" onclick="goBack()">← Retour</button>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="films.html">Films</a>
+        <a href="series.html">Séries</a>
+        <a href="new.html">Nouveautés</a>
+    </nav>
 
-    <div class="container">
-        <div class="film-info">
-            <h2>Tom et Jerry à New York</h2>
-            <p><strong>Genre :</strong> Comédie, Animation jeunesse</p>
-            <p><strong>Date de sortie :</strong> 2024</p>
-            <p><strong>Synopsis :</strong> Le duo débarque à New York. Tom et Jerry s'installent dans leurs nouveaux locaux au Royal Gate Hotel et déclenchent la pagaille dans la grosse pomme, provoquant un chaos hilarant partout où leurs escapades les mènent.</p>
-        </div>
-
-        <div class="video-container">
-            <iframe id="odysee-iframe" style="width:100%; aspect-ratio:16 / 9;" src="https://odysee.com/$/embed/@asekles:d/ep1:9c?r=8Put6NbMX9VneyevEdGDtnrueokioRt9" allowfullscreen></iframe>
-        </div>
-
-        <div class="episode-list">
-            <h2>Épisodes</h2>
-            <div class="episode-item" onclick="loadEpisode('https://odysee.com/$/embed/@asekles:d/ep1:9c?r=8Put6NbMX9VneyevEdGDtnrueokioRt9')">
-                <h3>Épisode 1</h3>
+    <div class="content">
+        <h2>Les Dernières Nouveautés</h2>
+        <div class="movie-grid">
+                        <!-- Nouveauté 2 avec lien vers une nouvelle page -->
+            <div class="movie-item">
+                <a href="#">
+                    <img src="Sans titre8.jpg" alt="Nouveau 1">
+                    <h3>vandame chasse a l'homme</h3>
+                </a>
             </div>
-            <div class="episode-item" onclick="loadEpisode('https://odysee.com/$/embed/@asekles:d/ep2:12a?r=8Put6NbMX9VneyevEdGDtnrueokioRt9')">
-                <h3>Épisode 2</h3>
+            <!-- Nouveauté 1 avec lien vers une nouvelle page -->
+            <div class="movie-item">
+                <a href="film7.html">
+                    <img src="Sans titre9.jpg" alt="Nouveau 2">
+                    <h3>Tom AK D Jerry Deg New York</h3>
+                </a>
             </div>
-            <div class="episode-item"#('#')">
-                <h3>Épisode 3</h3>
+            <!-- Nouveauté 2 avec lien vers une nouvelle page -->
+            <div class="movie-item">
+                <a href="film5.html">
+                    <img src="Sans titre7.jpg" alt="Nouveau 3">
+                    <h3>Zorro</h3>
+                </a>
             </div>
-            <div class="episode-item" #('#')">
-                <h3>Épisode 4</h3>
+            <!-- Nouveauté 3 avec lien vers une nouvelle page -->
+            <div class="movie-item">
+                <a href="film6.html">
+                    <img src="Sans titre(1).jpg" alt="Nouveau 4">
+                    <h3>Maca ak d micka</h3>
+                </a>
             </div>
-            <div class="episode-item" #('#')">
-                <h3>Épisode 5</h3>
-            </div>
-        </div>
-
-        <div class="actions-container">
-            <button onclick="showSuspense()">🎭 Découvrir</button>
         </div>
     </div>
+
+    <!-- Ajoute un espace pour le pied de page -->
+    <div class="footer-space"></div>
 
     <footer>
         <p>&copy; 2024 Asekles.com. Tous droits réservés.</p>
     </footer>
-
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-
-        function loadEpisode(episodeUrl) {
-            const iframe = document.getElementById('odysee-iframe');
-            iframe.src = episodeUrl;
-        }
-
-        function showSuspense() {
-            alert("Suspense... Que va-t-il se passer dans le prochain épisode ?");
-        }
-    </script>
-
 </body>
-
 </html>
