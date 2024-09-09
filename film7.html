@@ -7,7 +7,7 @@
     <title>Visionnage de Série - Asekles</title>
 
     <!-- Favicon -->
-    <link rel="icon" href="temp_segment_66d5163aa9dbf.png" type="temp_segment_66d5163aa9dbf.png">
+    <link rel="icon" href="temp_segment_66d5163aa9dbf.png" type="image/png">
     
     <style>
         body {
@@ -34,16 +34,58 @@
             letter-spacing: 1px;
         }
 
-        .header .nav-links a {
+        /* Navigation menu styles */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
             color: #fff;
             text-decoration: none;
-            margin: 0 20px;
             font-weight: bold;
             transition: color 0.3s;
         }
 
-        .header .nav-links a:hover {
+        .nav-links a:hover {
             color: #ffd700;
+        }
+
+        /* Menu hamburger */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+        }
+
+        .menu-toggle div {
+            height: 3px;
+            background-color: white;
+        }
+
+        /* Styles pour petits écrans */
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background-color: #e50914;
+                text-align: center;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
         }
 
         .container {
@@ -178,6 +220,11 @@
 
     <header class="header">
         <h1>Asekles.com</h1>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <div class="nav-links">
             <a href="index.html">Accueil</a>
             <a href="films.html">Films</a>
@@ -214,13 +261,12 @@
             <div class="episode-item" onclick="loadEpisode('https://odysee.com/$/embed/@asekles:d/ep4:a5?r=8Put6NbMX9VneyevEdGDtnrueokioRt9')">
                 <h3>Épisode 4</h3>
             </div>
-            <div class="episode-item" #('#')">
+            <div class="episode-item" onclick="loadEpisode('https://odysee.com/$/embed/@asekles:d/ep5:643?r=8Put6NbMX9VneyevEdGDtnrueokioRt9')">
                 <h3>Épisode 5</h3>
             </div>
-        </div>
-
-        <div class="actions-container">
-            <button onclick="showSuspense()">🎭 Découvrir</button>
+            <div class="episode-item" onclick="loadEpisode('https://odysee.com/$/embed/@asekles:d/ep6:a5?r=8Put6NbMX9VneyevEdGDtnrueokioRt9')">
+                <h3>Épisode 6</h3>
+            </div>
         </div>
     </div>
 
@@ -238,8 +284,9 @@
             iframe.src = episodeUrl;
         }
 
-        function showSuspense() {
-            alert("Suspense... Que va-t-il se passer dans le prochain épisode ?");
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
         }
     </script>
 
