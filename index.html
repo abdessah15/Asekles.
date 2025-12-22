@@ -1,32 +1,86 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Lecture Google Drive</title>
-<style>
-body{
-  background:black;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
-}
-iframe{
-  width:80%;
-  height:450px;
-  border-radius:12px;
-  box-shadow:0 0 20px red;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Lecteur Artplayer Odysee</title>
+  <!-- CSS Artplayer -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.css">
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .artplayer-app {
+      width: 80%;
+      max-width: 900px;
+      aspect-ratio: 16/9;
+    }
+
+    /* Personnalisation rouge */
+    .artplayer .artplayer-progress {
+      background-color: #ff0000 !important;
+    }
+    .artplayer .artplayer-progress-bar-circle {
+      background-color: #ff0000 !important;
+    }
+    .artplayer .artplayer-control .artplayer-icon {
+      color: #ff0000 !important;
+    }
+    .artplayer .artplayer-slider-bar {
+      background-color: #ff0000 !important;
+    }
+  </style>
 </head>
 <body>
+  <!-- Conteneur du lecteur -->
+  <div class="artplayer-app"></div>
 
-<iframe
-  src="https://drive.google.com/file/d/1AGTjTo4mMHeKSObdy6yeVYJYFbFeplca/preview"
-  allow="autoplay"
-  allowfullscreen>
-</iframe>
-
+  <!-- JS Artplayer -->
+  <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
+  <script>
+    var art = new Artplayer({
+      container: '.artplayer-app',
+      url: 'https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4',
+      volume: 0.5,
+      autoplay: false,
+      pip: true,
+      autoSize: true,
+      autoMini: true,
+      setting: true,
+      loop: true,
+      flip: true,
+      playbackRate: true,
+      aspectRatio: true,
+      fullscreen: true,
+      fullscreenWeb: true,
+      miniProgressBar: true,
+      mutex: true,
+      backdrop: true,
+      playsInline: true,
+      airplay: true,
+      theme: '#ff0000', // thème global rouge
+      lang: navigator.language.toLowerCase(),
+      contextmenu: [
+        {
+          html: 'Custom menu',
+          click(contextmenu) {
+            console.info('Vous avez cliqué sur le menu personnalisé');
+            contextmenu.show = false;
+          },
+        },
+      ],
+      quality: [
+        {
+          default: true,
+          html: 'HD',
+          url: 'https://player.odycdn.com/api/v3/streams/free/amghar-aneghrum/a1546c656ba55bc422bc7c2fab77ee83b2c7de65/f7e874.mp4',
+        },
+      ],
+    });
+  </script>
 </body>
 </html>
