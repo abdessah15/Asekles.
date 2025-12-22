@@ -1,55 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Lecteur Vidéo Drive</title>
-  <!-- Video.js CSS -->
-  <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-
-  <style>
-    body {
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .video-js {
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(255,0,0,0.5);
-    }
-    .vjs-control-bar {
-      background: rgba(0, 0, 0, 0.8);
-    }
-    .vjs-big-play-button {
-      background: red !important;
-      border-radius: 50% !important;
-      width: 80px !important;
-      height: 80px !important;
-    }
-    .vjs-big-play-button .vjs-icon-placeholder:before {
-      font-size: 2.5em;
-      line-height: 80px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Lecture Google Drive</title>
+<style>
+body{
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+iframe{
+  width:80%;
+  height:450px;
+  border-radius:12px;
+  box-shadow:0 0 20px red;
+}
+</style>
 </head>
 <body>
 
-  <video
-    id="my-video"
-    class="video-js vjs-big-play-centered"
-    controls
-    preload="auto"
-    width="720"
-    height="405"
-    poster=""  <!-- tu peux mettre une image de miniature ici -->
-    data-setup="{}"
-  >
-    <source src="https://www.googleapis.com/drive/v3/files/1AGTjTo4mMHeKSObdy6yeVYJYFbFeplca?alt=media&key=AIzaSyARj_1uFRLWEVzThaLt6iQO_NMo64c-_2s" type="video/mp4" />
-  </video>
+<iframe
+  src="https://drive.google.com/file/d/1AGTjTo4mMHeKSObdy6yeVYJYFbFeplca/preview"
+  allow="autoplay"
+  allowfullscreen>
+</iframe>
 
-  <!-- Video.js JS -->
-  <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 </body>
 </html>
