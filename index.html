@@ -326,43 +326,66 @@ Deg tlemmast n ṭrad amaḍlan wis sin, deg yidurar n Fransa, imezdaɣ n yiwet 
 <script>
   const thumb = document.getElementById("thumb");
   const playerBox = document.getElementById("player");
-  let art = null;
+  let art;
 
   thumb.addEventListener("click", () => {
     thumb.style.display = "none";
     playerBox.style.display = "block";
 
-    // Détruire l'ancien lecteur si existe
-    if (art) {
-      art.destroy();
-      art = null;
-    }
-
     art = new Artplayer({
       container: playerBox,
       url: "https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
-
       autoplay: true,
-      muted: false,
-      volume: 0.7,
-
-      pip: true,
-      airplay: true,
-      playbackRate: true,
-      aspectRatio: true,
-      autoSize: true,
-      setting: true,
-
-      fullscreen: false,
+      volume: 0.6,
+      fullscreen: true,
       fullscreenWeb: true,
       playsInline: true,
-
       theme: "#ff0066",
+      autoSize: false,
+      aspectRatio: false,
     });
 
-    // Plein écran seulement après interaction utilisateur
     art.on("ready", () => {
-      console.log("Lecteur prêt");
+      art.fullscreen = true;
     });
   });
+
+  function showDesc(title, text) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalText").innerText = text;
+    document.getElementById("modal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("modal").style.display = "none";
+  }
+
+  // Scroll des personnages
+  const charContainer = document.getElementById("characters");
+  const leftBtn = document.querySelector('.scroll-btn.left');
+  const rightBtn = document.querySelector('.scroll-btn.right');
+  const scrollAmount = 200;
+
+  function updateButtons() {
+    leftBtn.disabled = charContainer.scrollLeft <= 0;
+    rightBtn.disabled = charContainer.scrollLeft + charContainer.clientWidth >= charContainer.scrollWidth;
+  }
+
+  leftBtn.addEventListener('click', () => {
+    charContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    setTimeout(updateButtons, 300);
+  });
+
+  rightBtn.addEventListener('click', () => {
+    charContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    setTimeout(updateButtons, 300);
+  });
+
+  updateButtons();
 </script>
+
+</body>
+</html>
+
+
+
