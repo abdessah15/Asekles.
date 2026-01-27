@@ -3,32 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Asekles - Berhuc d Salas</title>
+<title>Asekles - Tamacahut N Wakli</title>
 <link rel="icon" href="Asekles.png" type="image/png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.css">
 
 <style>
-body { margin:0; font-family:Arial,sans-serif; background:#000; color:#f1f1f1; }
-header { background: linear-gradient(45deg,#ff0066,#6600ff); padding:15px; text-align:center;}
-nav { display:flex; justify-content:center; padding:10px; background:#111; gap:20px;}
-nav a { color:#fff; text-decoration:none; font-weight:bold;}
-.container { display:flex; flex-direction:column; align-items:center; gap:25px; padding:20px;}
-#authBox { text-align:center; margin-bottom:20px;}
-#authBox input { padding:8px; width:250px; border-radius:5px; border:none; margin:5px;}
-#authBox button { padding:10px 15px; margin:5px; border-radius:6px; border:none; cursor:pointer;}
-#loginBtn { background:#4285F4; color:white;}
-#logoutBtn { background:#555; color:white; display:none;}
-#subscribeBox a { background:#25D366; color:white; padding:10px 15px; border-radius:8px; text-decoration:none; display:inline-block; margin-top:10px;}
-.video-container { width:100%; max-width:900px; background:#000; border-radius:12px; overflow:hidden; display:none;} /* caché par défaut */
-.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none;} /* caché par défaut */
-.play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:90px; height:90px; background: rgba(0,0,0,0.6); border-radius:50%;}
-.artplayer-app { width:100%; aspect-ratio:16/9; display:none;} /* caché par défaut */
+body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; text-align:center;}
+header { background: linear-gradient(45deg,#ff0066,#6600ff); padding:15px;}
+header h1 { margin:0; font-size:1.8em;}
+nav a { color:#fff; text-decoration:none; margin:0 10px; font-weight:bold;}
+nav a:hover { color:#ff0066;}
+.container { padding:20px; }
+.video-container { width:100%; max-width:900px; margin:20px auto; display:none; }
+.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none;}
+.play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; background: rgba(0,0,0,0.6); border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.play-btn::before { content:""; border-style:solid; border-width:16px 0 16px 26px; border-color:transparent transparent transparent #ff0066; margin-left:3px;}
+.artplayer-app { width:100%; aspect-ratio:16/9; display:none;}
+#disconnectBtn, #whatsappBtn, #loginBox { margin-top:15px; padding:10px 15px; border:none; border-radius:6px; cursor:pointer; }
+#disconnectBtn { background:#555; color:#fff; }
+#whatsappBtn { background:#25D366; color:#fff; display:none; text-decoration:none; }
+#loginBox { background:#4285F4; color:#fff; display:none; }
 </style>
 </head>
 
 <body>
+
 <header>
-<h1>Berhuc d Salas</h1>
+<h1 id="authHeader">🔒 Connexion requise</h1>
+<button id="disconnectBtn" style="display:none;">Se déconnecter</button>
 </header>
 
 <nav>
@@ -39,23 +41,7 @@ nav a { color:#fff; text-decoration:none; font-weight:bold;}
 
 <div class="container">
 
-<!-- LOGIN -->
-<div id="authBox">
-  <p id="authStatus">🔒 Entrez vos identifiants</p>
-  <input type="email" id="emailInput" placeholder="Email">
-  <input type="password" id="passInput" placeholder="Mot de passe">
-  <div>
-    <button id="loginBtn">Se connecter</button>
-    <button id="logoutBtn">Se déconnecter</button>
-  </div>
-
-  <div id="subscribeBox" style="display:none;">
-    <p>💳 Abonnement requis</p>
-    <a id="whatsappBtn" target="_blank">📲 Contacter pour abonnement</a>
-  </div>
-</div>
-
-<!-- VIDEO -->
+<!-- Vidéo -->
 <div class="video-container">
   <div class="video-thumb" id="thumb">
     <div class="play-btn"></div>
@@ -63,14 +49,24 @@ nav a { color:#fff; text-decoration:none; font-weight:bold;}
   <div class="artplayer-app" id="player"></div>
 </div>
 
+<!-- Page connexion / abonnement -->
+<div id="loginBox">
+  <p>🔒 Vous devez vous connecter pour voir la vidéo</p>
+  <input type="email" id="emailInput" placeholder="Email" /><br><br>
+  <input type="password" id="passwordInput" placeholder="Mot de passe" /><br><br>
+  <button id="loginBtn">Se connecter</button>
+  <br><br>
+  <a id="whatsappBtn" target="_blank">📲 Acheter un abonnement via WhatsApp</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+</div>
 
-/* FIREBASE CONFIG */
+<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
+
+<script>
+// 🔥 CONFIG FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
   authDomain: "test-2fdd3.firebaseapp.com",
@@ -78,94 +74,93 @@ const firebaseConfig = {
   appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-/* ÉLÉMENTS */
-const emailInput = document.getElementById("emailInput");
-const passInput = document.getElementById("passInput");
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const authStatus = document.getElementById("authStatus");
-const subscribeBox = document.getElementById("subscribeBox");
-const whatsappBtn = document.getElementById("whatsappBtn");
+// ✅ EMAILS ABONNÉS
+const allowedUsers = [
+  "azul12@asekles.com",
+  "autre@email.com"
+];
+
+// ÉLÉMENTS DOM
+const authHeader = document.getElementById("authHeader");
+const disconnectBtn = document.getElementById("disconnectBtn");
+const videoContainer = document.querySelector(".video-container");
 const thumb = document.getElementById("thumb");
-const videoContainer = document.querySelector('.video-container');
+const playerBox = document.getElementById("player");
+const loginBox = document.getElementById("loginBox");
+const whatsappBtn = document.getElementById("whatsappBtn");
+const loginBtn = document.getElementById("loginBtn");
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
 
-/* LOGIN */
-loginBtn.onclick = async () => {
+// 🔑 LOGIN
+loginBtn.addEventListener("click", () => {
   const email = emailInput.value;
-  const password = passInput.value;
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    authStatus.innerText = `Connecté : ${user.email}`;
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline";
-    emailInput.style.display = "none";
-    passInput.style.display = "none";
-
-    // Afficher la vidéo
-    videoContainer.style.display = "block";
-    thumb.style.display = "block";
-    subscribeBox.style.display = "none";
-
-  } catch(err){
-    alert("Erreur : " + err.message);
-  }
-};
-
-/* LOGOUT */
-logoutBtn.onclick = () => {
-  signOut(auth);
-  authStatus.innerText = "🔒 Entrez vos identifiants";
-  loginBtn.style.display = "inline";
-  logoutBtn.style.display = "none";
-  emailInput.style.display = "inline";
-  passInput.style.display = "inline";
-  videoContainer.style.display = "none";
-  thumb.style.display = "none";
-  subscribeBox.style.display = "none";
-};
-
-/* DÉTECTION AUTOMATIQUE */
-onAuthStateChanged(auth, (user) => {
-  if(user){
-    authStatus.innerText = `Connecté : ${user.email}`;
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline";
-    emailInput.style.display = "none";
-    passInput.style.display = "none";
-
-    videoContainer.style.display = "block";
-    thumb.style.display = "block";
-    subscribeBox.style.display = "none";
-  } else {
-    authStatus.innerText = "🔒 Entrez vos identifiants";
-    loginBtn.style.display = "inline";
-    logoutBtn.style.display = "none";
-    emailInput.style.display = "inline";
-    passInput.style.display = "inline";
-
-    videoContainer.style.display = "none";
-    thumb.style.display = "none";
-    subscribeBox.style.display = "none";
-  }
+  const password = passwordInput.value;
+  auth.signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      const user = userCredential.user;
+      checkAccess(user.email);
+    })
+    .catch(error => alert(error.message));
 });
 
-/* VIDEO PLAYER */
-const playerBox = document.getElementById("player");
-thumb.onclick = () => {
+// 🔐 CHECK ACCESS
+function checkAccess(email) {
+  if (allowedUsers.includes(email)) {
+    // ✅ abonné
+    authHeader.innerText = "Connecté : " + email;
+    disconnectBtn.style.display = "inline";
+    loginBox.style.display = "none";
+    videoContainer.style.display = "block";
+    thumb.style.display = "block";
+    whatsappBtn.style.display = "none";
+  } else {
+    // ❌ pas abonné
+    authHeader.innerText = "🔒 Essai ou compte non autorisé";
+    videoContainer.style.display = "none";
+    thumb.style.display = "none";
+    loginBox.style.display = "block";
+    whatsappBtn.style.display = "inline";
+    whatsappBtn.href = "https://wa.me/2136XXXXXXX?text=" +
+      encodeURIComponent(`Bonjour, je souhaite m'abonner (200 DA). Email : ${email}`);
+  }
+}
+
+// 🚪 Déconnexion
+disconnectBtn.addEventListener("click", () => {
+  auth.signOut().then(() => {
+    authHeader.innerText = "🔒 Connexion requise";
+    disconnectBtn.style.display = "none";
+    videoContainer.style.display = "none";
+    thumb.style.display = "none";
+    loginBox.style.display = "block";
+    whatsappBtn.style.display = "inline";
+    whatsappBtn.href = "https://wa.me/2136XXXXXXX?text=" +
+      encodeURIComponent(`Bonjour, je souhaite m'abonner (200 DA).`);
+  });
+});
+
+// ▶️ PLAYER
+thumb.addEventListener("click", () => {
   thumb.style.display = "none";
   playerBox.style.display = "block";
 
   new Artplayer({
     container: playerBox,
-    url: "https://player.odycdn.com/api/v3/streams/free/Berhuc-d-Salas/49982ca9dd551d7b0df506ad31aea175559fd1d7/1400aa.mp4",
+    url: "https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
     autoplay: true,
-    theme: "#ff0066"
+    volume: 0.6,
+    fullscreen: true,
+    fullscreenWeb: true,
+    playsInline: true,
+    theme: "#ff0066",
+    autoSize: false,
+    aspectRatio: false
   });
-};
+});
 </script>
 </body>
 </html>
