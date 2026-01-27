@@ -11,7 +11,8 @@
 body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; text-align:center;}
 header { background: linear-gradient(45deg,#ff0066,#6600ff); padding:15px;}
 header h1 { margin:0; font-size:1.8em;}
-nav a { color:#fff; text-decoration:none; margin:0 10px; font-weight:bold;}
+nav { display:flex; justify-content:center; padding:10px; gap:20px; flex-wrap:wrap;}
+nav a { color:#fff; text-decoration:none; font-weight:bold;}
 nav a:hover { color:#ff0066;}
 .container { padding:20px; }
 .video-container { width:100%; max-width:900px; margin:20px auto; display:none; }
@@ -19,21 +20,23 @@ nav a:hover { color:#ff0066;}
 .play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; background: rgba(0,0,0,0.6); border-radius:50%; display:flex; align-items:center; justify-content:center;}
 .play-btn::before { content:""; border-style:solid; border-width:16px 0 16px 26px; border-color:transparent transparent transparent #ff0066; margin-left:3px;}
 .artplayer-app { width:100%; aspect-ratio:16/9; display:none;}
-#disconnectBtn, #whatsappBtn, #loginBox { margin-top:15px; padding:10px 15px; border:none; border-radius:6px; cursor:pointer; }
-#disconnectBtn { background:#555; color:#fff; }
+#disconnectBtn, #loginBox, #loginBtn, #whatsappBtn { margin-top:15px; padding:10px 15px; border:none; border-radius:6px; cursor:pointer; }
+#disconnectBtn { background:#555; color:#fff; display:none;}
+#loginBox { display:block; background:#111; padding:20px; border-radius:10px; max-width:400px; margin:20px auto; }
+#loginBtn { background:#4285F4; color:#fff; width:100%; }
 #whatsappBtn { background:#25D366; color:#fff; display:none; text-decoration:none; }
-#loginBox { background:#4285F4; color:#fff; display:none; }
+input[type=email], input[type=password] { width:90%; padding:8px; margin:5px 0; border-radius:5px; border:none; }
 </style>
 </head>
 
 <body>
 
 <header>
-<h1 id="authHeader">🔒 Connexion requise</h1>
-<button id="disconnectBtn" style="display:none;">Se déconnecter</button>
+<h1 id="authHeader">🔒 Entrez vos identifiants</h1>
+<button id="disconnectBtn">Se déconnecter</button>
 </header>
 
-<nav>
+<nav id="mainNav">
 <a href="index.html">Axxam</a>
 <a href="isura.html">Isura</a>
 <a href="tizrarin.html">Tizrarin</a>
@@ -49,11 +52,10 @@ nav a:hover { color:#ff0066;}
   <div class="artplayer-app" id="player"></div>
 </div>
 
-<!-- Page connexion / abonnement -->
+<!-- Page connexion -->
 <div id="loginBox">
-  <p>🔒 Vous devez vous connecter pour voir la vidéo</p>
-  <input type="email" id="emailInput" placeholder="Email" /><br><br>
-  <input type="password" id="passwordInput" placeholder="Mot de passe" /><br><br>
+  <input type="email" id="emailInput" placeholder="azul12@asekles.com" /><br>
+  <input type="password" id="passwordInput" placeholder="•••••••••" /><br>
   <button id="loginBtn">Se connecter</button>
   <br><br>
   <a id="whatsappBtn" target="_blank">📲 Acheter un abonnement via WhatsApp</a>
@@ -73,15 +75,11 @@ const firebaseConfig = {
   projectId: "test-2fdd3",
   appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 // ✅ EMAILS ABONNÉS
-const allowedUsers = [
-  "azul12@asekles.com",
-  "autre@email.com"
-];
+const allowedUsers = ["azul12@asekles.com"];
 
 // ÉLÉMENTS DOM
 const authHeader = document.getElementById("authHeader");
@@ -94,6 +92,7 @@ const whatsappBtn = document.getElementById("whatsappBtn");
 const loginBtn = document.getElementById("loginBtn");
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
+const nav = document.getElementById("mainNav");
 
 // 🔑 LOGIN
 loginBtn.addEventListener("click", () => {
@@ -110,16 +109,24 @@ loginBtn.addEventListener("click", () => {
 // 🔐 CHECK ACCESS
 function checkAccess(email) {
   if (allowedUsers.includes(email)) {
-    // ✅ abonné
     authHeader.innerText = "Connecté : " + email;
     disconnectBtn.style.display = "inline";
     loginBox.style.display = "none";
     videoContainer.style.display = "block";
     thumb.style.display = "block";
     whatsappBtn.style.display = "none";
+
+    // 🔹 Ajouter Amiḍan seulement si il n'existe pas
+    if (!nav.querySelector('a[href="amidan.html"]')) {
+      const tizrarinLink = nav.querySelector('a[href="tizrarin.html"]');
+      const amidanLink = document.createElement("a");
+      amidanLink.href = "amidan.html";
+      amidanLink.innerText = "Amiḍan";
+      nav.insertBefore(amidanLink, tizrarinLink);
+    }
+
   } else {
-    // ❌ pas abonné
-    authHeader.innerText = "🔒 Essai ou compte non autorisé";
+    authHeader.innerText = "🔒 Compte non autorisé";
     videoContainer.style.display = "none";
     thumb.style.display = "none";
     loginBox.style.display = "block";
@@ -132,14 +139,15 @@ function checkAccess(email) {
 // 🚪 Déconnexion
 disconnectBtn.addEventListener("click", () => {
   auth.signOut().then(() => {
-    authHeader.innerText = "🔒 Connexion requise";
+    authHeader.innerText = "🔒 Entrez vos identifiants";
     disconnectBtn.style.display = "none";
     videoContainer.style.display = "none";
     thumb.style.display = "none";
     loginBox.style.display = "block";
     whatsappBtn.style.display = "inline";
-    whatsappBtn.href = "https://wa.me/2136XXXXXXX?text=" +
-      encodeURIComponent(`Bonjour, je souhaite m'abonner (200 DA).`);
+
+    const amidan = nav.querySelector('a[href="amidan.html"]');
+    if (amidan) amidan.remove();
   });
 });
 
@@ -162,5 +170,6 @@ thumb.addEventListener("click", () => {
   });
 });
 </script>
+
 </body>
 </html>
