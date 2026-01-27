@@ -5,117 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Asekles - Berhuc d Salas</title>
 <link rel="icon" href="Asekles.png" type="image/png">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.css">
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #000;
-  color: #f1f1f1;
-}
-
-header {
-  background: linear-gradient(45deg, #ff0066, #6600ff);
-  padding: 15px;
-  text-align: center;
-}
-
-nav {
-  display: flex;
-  justify-content: center;
-  padding: 10px;
-  background-color: #111;
-  gap: 20px;
-}
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
-  padding: 20px;
-}
-
-/* ===== ABONNEMENT ===== */
-#authBox {
-  text-align: center;
-}
-
-#authBox button {
-  padding: 10px 15px;
-  margin: 5px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-#loginBtn {
-  background: #4285F4;
-  color: white;
-}
-
-#logoutBtn {
-  background: #555;
-  color: white;
-}
-
-#subscribeBox a {
-  background: #25D366;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 10px;
-}
-
-/* ===== VIDEO ===== */
-.video-container {
-  width: 100%;
-  max-width: 900px;
-  background: #000;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.video-thumb {
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: url("3.png") center/cover no-repeat;
-  cursor: pointer;
-  position: relative;
-  display: none;
-}
-
-.play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90px;
-  height: 90px;
-  background: rgba(0,0,0,0.6);
-  border-radius: 50%;
-}
-
-.artplayer-app {
-  width: 100%;
-  aspect-ratio: 16/9;
-  display: none;
-}
+body { margin:0; font-family:Arial,sans-serif; background:#000; color:#f1f1f1; }
+header { background: linear-gradient(45deg,#ff0066,#6600ff); padding:15px; text-align:center;}
+nav { display:flex; justify-content:center; padding:10px; background:#111; gap:20px;}
+nav a { color:#fff; text-decoration:none; font-weight:bold;}
+.container { display:flex; flex-direction:column; align-items:center; gap:25px; padding:20px;}
+#authBox { text-align:center; margin-bottom:20px;}
+#authBox input { padding:8px; width:250px; border-radius:5px; border:none; margin:5px;}
+#authBox button { padding:10px 15px; margin:5px; border-radius:6px; border:none; cursor:pointer;}
+#loginBtn { background:#4285F4; color:white;}
+#logoutBtn { background:#555; color:white; display:none;}
+#subscribeBox a { background:#25D366; color:white; padding:10px 15px; border-radius:8px; text-decoration:none; display:inline-block; margin-top:10px;}
+.video-container { width:100%; max-width:900px; background:#000; border-radius:12px; overflow:hidden;}
+.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none;}
+.play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:90px; height:90px; background: rgba(0,0,0,0.6); border-radius:50%;}
+.artplayer-app { width:100%; aspect-ratio:16/9; display:none;}
 </style>
 </head>
 
 <body>
-
 <header>
 <h1>Berhuc d Salas</h1>
 </header>
@@ -128,12 +39,12 @@ nav a {
 
 <div class="container">
 
-<!-- ===== AUTH / ABONNEMENT ===== -->
+<!-- LOGIN PAR EMAIL -->
 <div id="authBox">
-  <p id="authStatus">🔒 Connexion requise</p>
-
-  <button id="loginBtn">Se connecter avec Google</button>
-  <button id="logoutBtn" style="display:none;">Se déconnecter</button>
+  <p id="authStatus">🔒 Entrez votre email pour accéder</p>
+  <input type="email" id="emailInput" placeholder="Votre email">
+  <button id="loginBtn">Se connecter</button>
+  <button id="logoutBtn">Se déconnecter</button>
 
   <div id="subscribeBox" style="display:none;">
     <p>💳 Abonnement : <strong>200 DA / mois</strong></p>
@@ -141,7 +52,7 @@ nav a {
   </div>
 </div>
 
-<!-- ===== VIDEO ===== -->
+<!-- VIDEO -->
 <div class="video-container">
   <div class="video-thumb" id="thumb">
     <div class="play-btn"></div>
@@ -152,18 +63,11 @@ nav a {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-/* 🔥 FIREBASE CONFIG (DÉJÀ REMPLACÉ) */
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
   authDomain: "test-2fdd3.firebaseapp.com",
@@ -172,57 +76,69 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
 
-/* 🎯 ELEMENTS */
+/* ELEMENTS */
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
+const emailInput = document.getElementById("emailInput");
 const authStatus = document.getElementById("authStatus");
 const subscribeBox = document.getElementById("subscribeBox");
 const whatsappBtn = document.getElementById("whatsappBtn");
 const thumb = document.getElementById("thumb");
 
-/* 🧪 EMAILS AUTORISÉS (MET TON EMAIL ICI) */
-const allowedUsers = [
-  "exemple@gmail.com"
-];
+let currentUser = null;
 
-/* 🔑 LOGIN */
-loginBtn.onclick = () => signInWithPopup(auth, provider);
+/* FONCTION DE VERIFICATION FIRESTORE */
+async function checkSubscription(email){
+  const ref = doc(db, "subscriptions", email);
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return false;
+  const data = snap.data();
+  if(!data.active) return false;
+  const now = new Date();
+  const expires = data.expiresAt.toDate();
+  return expires > now;
+}
 
-/* 🚪 LOGOUT */
-logoutBtn.onclick = () => signOut(auth);
+/* LOGIN PAR EMAIL */
+loginBtn.onclick = async () => {
+  const email = emailInput.value.trim().toLowerCase();
+  if(!email) return alert("Veuillez entrer votre email");
+  currentUser = email;
 
-/* 🔐 AUTH STATE */
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    authStatus.innerText = "Connecté : " + user.email;
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline";
+  const isActive = await checkSubscription(email);
 
-    if (allowedUsers.includes(user.email)) {
-      // ✅ ABONNÉ
-      thumb.style.display = "block";
-      subscribeBox.style.display = "none";
-    } else {
-      // ❌ NON ABONNÉ
-      thumb.style.display = "none";
-      subscribeBox.style.display = "block";
-      const msg = `Bonjour, je me suis connecté avec l’email ${user.email} et j’ai payé 200 DA pour l’abonnement mensuel.`;
-      whatsappBtn.href =
-        "https://wa.me/2136XXXXXXX?text=" + encodeURIComponent(msg);
-    }
-  } else {
-    authStatus.innerText = "🔒 Connexion requise";
-    loginBtn.style.display = "inline";
-    logoutBtn.style.display = "none";
+  if(isActive){
+    authStatus.innerText = "Connecté : " + email;
+    thumb.style.display = "block";
     subscribeBox.style.display = "none";
+  } else {
+    authStatus.innerText = "🔒 Abonnement requis";
     thumb.style.display = "none";
+    subscribeBox.style.display = "block";
+    const msg = `Bonjour, je veux m'abonner pour 200 DA. Mon email : ${email}`;
+    whatsappBtn.href = "https://wa.me/2136XXXXXXX?text=" + encodeURIComponent(msg);
   }
-});
 
-/* ▶️ PLAYER */
+  loginBtn.style.display = "none";
+  logoutBtn.style.display = "inline";
+  emailInput.style.display = "none";
+};
+
+/* LOGOUT */
+logoutBtn.onclick = () => {
+  currentUser = null;
+  authStatus.innerText = "🔒 Entrez votre email pour accéder";
+  loginBtn.style.display = "inline";
+  logoutBtn.style.display = "none";
+  emailInput.style.display = "inline";
+  emailInput.value = "";
+  thumb.style.display = "none";
+  subscribeBox.style.display = "none";
+};
+
+/* VIDEO PLAYER */
 const playerBox = document.getElementById("player");
 thumb.onclick = () => {
   thumb.style.display = "none";
@@ -236,6 +152,5 @@ thumb.onclick = () => {
   });
 };
 </script>
-
 </body>
 </html>
