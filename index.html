@@ -6,6 +6,24 @@
   <title>ⵣ Asekles - ⴰⵙⴻⴽⵍⴻⵙ ⵣ</title>
   <link rel="icon" href="Asekles.png" type="image/png">
   <style>
+    <!-- BOÎTE COMPTE -->
+<div id="accountBox" style="
+display:none;
+position:fixed;
+top:60px;
+right:20px;
+background:#111;
+border:2px solid #ff0066;
+padding:15px;
+border-radius:10px;
+z-index:999;
+">
+  <p id="userEmail"></p>
+  <button id="logoutBtn"
+    style="background:#ff0066;color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;">
+    Se déconnecter
+  </button>
+</div>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -207,11 +225,16 @@
     <h1>ⵣ Asekles - ⴰⵙⴻⴽⵍⴻⵙ ⵣ</h1>
   </header>
 
-  <nav>
-    <a href="index.html">Axxam</a>
-    <a href="isura.html">Isura</a>
-    <a href="tizrarin.html">Tizrarin</a>
-  </nav>
+ <nav>
+  <a href="index.html">Axxam</a>
+  <a href="isura.html">Isura</a>
+  <a href="tizrarin.html">Tizrarin</a>
+
+  <!-- AMIDAN -->
+  <a href="javascript:void(0)" id="amidanBtn" style="display:none;">Amiḍan</a>
+    </div>
+  </div>
+</nav>
 
     <div class="content">
     <h2>I kunwi d kunemti</h2>
@@ -307,83 +330,13 @@
         </a>
       </div>
 
-  <!-- Bouton flottant DON -->
-  <a href="Don.html" id="don-float">
-    <img src="https://logowik.com/content/uploads/images/baridimob2693.logowik.com.webp" alt="BaridiMob">
-    Gred asefk
-  </a>
-
   <footer>
     <p>&copy; 2026 Asekles</p>
   </footer>
-
-  <!-- SCRIPT MENU LANGUE -->
-  <script>
-    const btn = document.getElementById("lang-btn");
-    const menu = document.getElementById("lang-menu");
-    const langSwitch = document.querySelector('.lang-switch');
-    const defaultBtnText = btn.textContent;
-
-    // Ouvrir/fermer menu (toggle)
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opened = menu.style.display === "block";
-      menu.style.display = opened ? "none" : "block";
-      langSwitch.setAttribute('aria-expanded', String(!opened));
-      menu.setAttribute('aria-hidden', String(opened));
-    });
-
-    // Empêcher la fermeture quand on clique dans le menu
-    menu.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-
-    // Fermer le menu si on clique ailleurs
-    document.addEventListener('click', (e) => {
-      if (!langSwitch.contains(e.target)) {
-        menu.style.display = "none";
-        langSwitch.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-      }
-    });
-
-    // Afficher le nom de la langue dans le bouton au survol d'un item
-    const items = menu.querySelectorAll('a');
-    items.forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        // montrer le texte de l'item (utile si texte coupé ou si tu veux un "preview")
-        btn.textContent = item.textContent.trim();
-      });
-      item.addEventListener('mouseleave', () => {
-        // revenir au texte par défaut
-        btn.textContent = defaultBtnText;
-      });
-
-      // Optionnel : si l'utilisateur clique sur une langue, mettez à jour le bouton et fermez
-      item.addEventListener('click', (ev) => {
-        btn.textContent = item.textContent.trim();
-        menu.style.display = "none";
-        langSwitch.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        // laisse le lien fonctionner normalement (navigation)
-      });
-    });
-
-    // Si l'utilisateur quitte tout le widget (touche Échap), fermer
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        menu.style.display = 'none';
-        langSwitch.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        btn.focus();
-      }
-    });
-  </script>
-<script type="module">
+        <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
-/* 🔥 FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
   authDomain: "test-2fdd3.firebaseapp.com",
@@ -394,15 +347,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-/* 🎯 ELEMENTS */
 const amidanBtn = document.getElementById("amidanBtn");
 const accountBox = document.getElementById("accountBox");
 const userEmail = document.getElementById("userEmail");
 const logoutBtn = document.getElementById("logoutBtn");
-const thumb = document.getElementById("thumb");
-const playerBox = document.getElementById("player");
 
-/* 🔐 PROTECTION PAGE */
+/* 🔐 PROTECTION */
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "login.html";
@@ -423,20 +373,6 @@ logoutBtn.onclick = async () => {
   await signOut(auth);
   window.location.href = "login.html";
 };
-
-/* ▶️ PLAYER */
-thumb.onclick = () => {
-  thumb.style.display = "none";
-  playerBox.style.display = "block";
-
-  new Artplayer({
-    container: playerBox,
-    url: "https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
-    autoplay:true,
-    theme:"#ff0066"
-  });
-};
 </script>
-
 </body>
 </html>
