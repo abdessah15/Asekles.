@@ -4,159 +4,196 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Asekles - Tamacahut N Wakli</title>
-<link rel="icon" href="Asekles.png" type="image/png">
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.css">
+
 <style>
-body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; text-align:center; }
-header { background:linear-gradient(45deg,#ff0066,#6600ff); padding:15px; }
-header h1 { margin:0; }
-nav { display:flex; justify-content:center; gap:20px; padding:10px; flex-wrap:wrap; }
-nav a { color:#fff; text-decoration:none; font-weight:bold; }
-nav a:hover { color:#ff0066; }
-.container { padding:20px; }
-.video-container { display:none; max-width:900px; margin:20px auto; }
-.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none; }
-.play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; background: rgba(0,0,0,0.6); border-radius:50%; display:flex; align-items:center; justify-content:center; }
-.play-btn::before { content:""; border-style:solid; border-width:16px 0 16px 26px; border-color:transparent transparent transparent #ff0066; margin-left:3px; }
-.artplayer-app { width:100%; aspect-ratio:16/9; display:none; }
-#loginBox { background:#111; padding:20px; max-width:400px; margin:20px auto; border-radius:10px; }
-input { width:90%; padding:8px; margin:5px 0; border:none; border-radius:5px; }
-button { padding:10px 15px; border:none; border-radius:6px; cursor:pointer; margin-top:5px; }
-#loginBtn { background:#4285F4; color:#fff; width:100%; }
-#disconnectBtn { display:none; background:#555; color:#fff; margin-top:10px; }
-#whatsappBtn { display:none; background:#25D366; color:#fff; text-decoration:none; padding:10px 15px; border-radius:6px; margin-top:10px; display:inline-block; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background:#000;
+  color:#f1f1f1;
+}
+
+header {
+  background: linear-gradient(45deg, #ff0066, #6600ff);
+  padding: 15px;
+  text-align: center;
+}
+
+nav {
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  background:#111;
+  padding:10px;
+}
+
+nav a {
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+nav a:hover { color:#ff0066 }
+
+.container {
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:25px;
+}
+
+#accountBox {
+  display:none;
+  background:#111;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+}
+
+#logoutBtn {
+  margin-top:10px;
+  padding:8px 15px;
+  border:none;
+  background:#ff0066;
+  color:#fff;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.video-container {
+  max-width:900px;
+  width:100%;
+}
+
+.video-thumb {
+  width:100%;
+  aspect-ratio:16/9;
+  background:url("3.png") center/cover no-repeat;
+  cursor:pointer;
+  position:relative;
+}
+
+.play-btn {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:80px;
+  height:80px;
+  background:rgba(0,0,0,.6);
+  border-radius:50%;
+}
+
+.play-btn::before {
+  content:"";
+  border-style:solid;
+  border-width:16px 0 16px 26px;
+  border-color:transparent transparent transparent #ff0066;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-40%,-50%);
+}
+
+#player { display:none }
 </style>
 </head>
+
 <body>
 
 <header>
-<h1 id="authHeader">🔒 Entrez vos identifiants</h1>
-<button id="disconnectBtn">Se déconnecter</button>
+<h1>Berhuc d Salas</h1>
 </header>
 
-<nav id="mainNav">
+<nav>
 <a href="index.html">Axxam</a>
 <a href="isura.html">Isura</a>
 <a href="tizrarin.html">Tizrarin</a>
+<a id="amidanBtn" style="display:none;">Amiḍan</a>
 </nav>
 
 <div class="container">
 
-<!-- Vidéo -->
+<!-- ===== AMIDAN ===== -->
+<div id="accountBox">
+  <p id="userEmail"></p>
+  <button id="logoutBtn">Se déconnecter</button>
+</div>
+
+<!-- ===== VIDEO ===== -->
 <div class="video-container">
   <div class="video-thumb" id="thumb">
     <div class="play-btn"></div>
   </div>
-  <div class="artplayer-app" id="player"></div>
-</div>
-
-<!-- Connexion -->
-<div id="loginBox">
-  <input type="email" id="emailInput" placeholder="azul12@asekles.com"><br>
-  <input type="password" id="passwordInput" placeholder="•••••••••"><br>
-  <button id="loginBtn">Se connecter</button>
-  <br>
-  <a id="whatsappBtn" target="_blank">📲 Acheter un abonnement via WhatsApp</a>
+  <div id="player"></div>
 </div>
 
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-auth-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
 
-<script>
-// 🔹 Config Firebase
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+/* 🔥 FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
   authDomain: "test-2fdd3.firebaseapp.com",
   projectId: "test-2fdd3",
   appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
 };
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
 
-// 🔹 Emails autorisés
-const allowedUsers = ["azul12@asekles.com"];
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-// 🔹 DOM
-const authHeader = document.getElementById("authHeader");
-const disconnectBtn = document.getElementById("disconnectBtn");
-const videoContainer = document.querySelector(".video-container");
+/* 🎯 ELEMENTS */
+const amidanBtn = document.getElementById("amidanBtn");
+const accountBox = document.getElementById("accountBox");
+const userEmail = document.getElementById("userEmail");
+const logoutBtn = document.getElementById("logoutBtn");
 const thumb = document.getElementById("thumb");
 const playerBox = document.getElementById("player");
-const loginBox = document.getElementById("loginBox");
-const whatsappBtn = document.getElementById("whatsappBtn");
-const loginBtn = document.getElementById("loginBtn");
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const nav = document.getElementById("mainNav");
 
-// 🔑 Login
-loginBtn.addEventListener("click", ()=>{
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  auth.signInWithEmailAndPassword(email,password)
-      .catch(e=>alert(e.message));
-});
-
-// 🔐 Auth state
-auth.onAuthStateChanged(user=>{
-  if(user){
-    const email = user.email;
-    if(allowedUsers.includes(email)){
-      // ✅ Autorisé
-      authHeader.innerText = "Connecté : "+email;
-      disconnectBtn.style.display="inline";
-      loginBox.style.display="none";
-      videoContainer.style.display="block";
-      thumb.style.display="block";
-      whatsappBtn.style.display="none";
-
-      // Ajouter Amiḍan si pas présent
-      if(!nav.querySelector('a[href="amidan.html"]')){
-        const tiz = nav.querySelector('a[href="tizrarin.html"]');
-        const ami = document.createElement("a");
-        ami.href="amidan.html";
-        ami.innerText="Amiḍan";
-        nav.insertBefore(ami,tiz);
-      }
-
-    }else{
-      // ❌ Non autorisé
-      authHeader.innerText="🔒 Compte non autorisé";
-      loginBox.style.display="block";
-      whatsappBtn.style.display="inline";
-      whatsappBtn.href="https://wa.me/2136XXXXXXX?text="+encodeURIComponent(`Bonjour, je souhaite m'abonner (200 DA). Email : ${email}`);
-      videoContainer.style.display="none";
-      thumb.style.display="none";
-    }
-  }else{
-    authHeader.innerText="🔒 Entrez vos identifiants";
-    disconnectBtn.style.display="none";
-    loginBox.style.display="block";
-    whatsappBtn.style.display="none";
-    videoContainer.style.display="none";
-    thumb.style.display="none";
-    const ami = nav.querySelector('a[href="amidan.html"]');
-    if(ami) ami.remove();
+/* 🔐 PROTECTION PAGE */
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    amidanBtn.style.display = "inline";
+    userEmail.innerText = "Connecté : " + user.email;
   }
 });
 
-// Déconnexion
-disconnectBtn.addEventListener("click",()=> auth.signOut());
+/* 👤 AMIDAN */
+amidanBtn.onclick = () => {
+  accountBox.style.display =
+    accountBox.style.display === "block" ? "none" : "block";
+};
 
-// Player
-thumb.addEventListener("click",()=>{
-  thumb.style.display="none";
-  playerBox.style.display="block";
+/* 🚪 LOGOUT */
+logoutBtn.onclick = async () => {
+  await signOut(auth);
+  window.location.href = "login.html";
+};
+
+/* ▶️ PLAYER */
+thumb.onclick = () => {
+  thumb.style.display = "none";
+  playerBox.style.display = "block";
+
   new Artplayer({
-    container:playerBox,
-    url:"https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
+    container: playerBox,
+    url: "https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
     autoplay:true,
     theme:"#ff0066"
   });
-});
+};
 </script>
+
 </body>
 </html>
