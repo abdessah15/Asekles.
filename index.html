@@ -6,29 +6,27 @@
 <title>Asekles - Tamacahut N Wakli</title>
 <link rel="icon" href="Asekles.png" type="image/png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.css">
-
 <style>
-body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; text-align:center;}
-header { background: linear-gradient(45deg,#ff0066,#6600ff); padding:15px;}
-header h1 { margin:0; font-size:1.8em;}
-nav { display:flex; justify-content:center; padding:10px; gap:20px; flex-wrap:wrap;}
-nav a { color:#fff; text-decoration:none; font-weight:bold;}
-nav a:hover { color:#ff0066;}
+body { margin:0; font-family:Arial,sans-serif; background:#000; color:#fff; text-align:center; }
+header { background:linear-gradient(45deg,#ff0066,#6600ff); padding:15px; }
+header h1 { margin:0; }
+nav { display:flex; justify-content:center; gap:20px; padding:10px; flex-wrap:wrap; }
+nav a { color:#fff; text-decoration:none; font-weight:bold; }
+nav a:hover { color:#ff0066; }
 .container { padding:20px; }
-.video-container { width:100%; max-width:900px; margin:20px auto; display:none; }
-.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none;}
-.play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; background: rgba(0,0,0,0.6); border-radius:50%; display:flex; align-items:center; justify-content:center;}
-.play-btn::before { content:""; border-style:solid; border-width:16px 0 16px 26px; border-color:transparent transparent transparent #ff0066; margin-left:3px;}
-.artplayer-app { width:100%; aspect-ratio:16/9; display:none;}
-#disconnectBtn, #loginBox, #loginBtn, #whatsappBtn { margin-top:15px; padding:10px 15px; border:none; border-radius:6px; cursor:pointer; }
-#disconnectBtn { background:#555; color:#fff; display:none;}
-#loginBox { display:block; background:#111; padding:20px; border-radius:10px; max-width:400px; margin:20px auto; }
+.video-container { display:none; max-width:900px; margin:20px auto; }
+.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none; }
+.play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; background: rgba(0,0,0,0.6); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.play-btn::before { content:""; border-style:solid; border-width:16px 0 16px 26px; border-color:transparent transparent transparent #ff0066; margin-left:3px; }
+.artplayer-app { width:100%; aspect-ratio:16/9; display:none; }
+#loginBox { background:#111; padding:20px; max-width:400px; margin:20px auto; border-radius:10px; }
+input { width:90%; padding:8px; margin:5px 0; border:none; border-radius:5px; }
+button { padding:10px 15px; border:none; border-radius:6px; cursor:pointer; margin-top:5px; }
 #loginBtn { background:#4285F4; color:#fff; width:100%; }
-#whatsappBtn { background:#25D366; color:#fff; display:none; text-decoration:none; }
-input[type=email], input[type=password] { width:90%; padding:8px; margin:5px 0; border-radius:5px; border:none; }
+#disconnectBtn { display:none; background:#555; color:#fff; margin-top:10px; }
+#whatsappBtn { display:none; background:#25D366; color:#fff; text-decoration:none; padding:10px 15px; border-radius:6px; margin-top:10px; display:inline-block; }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -52,23 +50,23 @@ input[type=email], input[type=password] { width:90%; padding:8px; margin:5px 0; 
   <div class="artplayer-app" id="player"></div>
 </div>
 
-<!-- Page connexion -->
+<!-- Connexion -->
 <div id="loginBox">
-  <input type="email" id="emailInput" placeholder="azul12@asekles.com" /><br>
-  <input type="password" id="passwordInput" placeholder="•••••••••" /><br>
+  <input type="email" id="emailInput" placeholder="azul12@asekles.com"><br>
+  <input type="password" id="passwordInput" placeholder="•••••••••"><br>
   <button id="loginBtn">Se connecter</button>
-  <br><br>
+  <br>
   <a id="whatsappBtn" target="_blank">📲 Acheter un abonnement via WhatsApp</a>
 </div>
 
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-auth-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
 
 <script>
-// 🔥 CONFIG FIREBASE
+// 🔹 Config Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
   authDomain: "test-2fdd3.firebaseapp.com",
@@ -78,10 +76,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// ✅ EMAILS ABONNÉS
+// 🔹 Emails autorisés
 const allowedUsers = ["azul12@asekles.com"];
 
-// ÉLÉMENTS DOM
+// 🔹 DOM
 const authHeader = document.getElementById("authHeader");
 const disconnectBtn = document.getElementById("disconnectBtn");
 const videoContainer = document.querySelector(".video-container");
@@ -94,82 +92,71 @@ const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
 const nav = document.getElementById("mainNav");
 
-// 🔑 LOGIN
-loginBtn.addEventListener("click", () => {
+// 🔑 Login
+loginBtn.addEventListener("click", ()=>{
   const email = emailInput.value;
   const password = passwordInput.value;
-  auth.signInWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      const user = userCredential.user;
-      checkAccess(user.email);
-    })
-    .catch(error => alert(error.message));
+  auth.signInWithEmailAndPassword(email,password)
+      .catch(e=>alert(e.message));
 });
 
-// 🔐 CHECK ACCESS
-function checkAccess(email) {
-  if (allowedUsers.includes(email)) {
-    authHeader.innerText = "Connecté : " + email;
-    disconnectBtn.style.display = "inline";
-    loginBox.style.display = "none";
-    videoContainer.style.display = "block";
-    thumb.style.display = "block";
-    whatsappBtn.style.display = "none";
+// 🔐 Auth state
+auth.onAuthStateChanged(user=>{
+  if(user){
+    const email = user.email;
+    if(allowedUsers.includes(email)){
+      // ✅ Autorisé
+      authHeader.innerText = "Connecté : "+email;
+      disconnectBtn.style.display="inline";
+      loginBox.style.display="none";
+      videoContainer.style.display="block";
+      thumb.style.display="block";
+      whatsappBtn.style.display="none";
 
-    // 🔹 Ajouter Amiḍan seulement si il n'existe pas
-    if (!nav.querySelector('a[href="amidan.html"]')) {
-      const tizrarinLink = nav.querySelector('a[href="tizrarin.html"]');
-      const amidanLink = document.createElement("a");
-      amidanLink.href = "amidan.html";
-      amidanLink.innerText = "Amiḍan";
-      nav.insertBefore(amidanLink, tizrarinLink);
+      // Ajouter Amiḍan si pas présent
+      if(!nav.querySelector('a[href="amidan.html"]')){
+        const tiz = nav.querySelector('a[href="tizrarin.html"]');
+        const ami = document.createElement("a");
+        ami.href="amidan.html";
+        ami.innerText="Amiḍan";
+        nav.insertBefore(ami,tiz);
+      }
+
+    }else{
+      // ❌ Non autorisé
+      authHeader.innerText="🔒 Compte non autorisé";
+      loginBox.style.display="block";
+      whatsappBtn.style.display="inline";
+      whatsappBtn.href="https://wa.me/2136XXXXXXX?text="+encodeURIComponent(`Bonjour, je souhaite m'abonner (200 DA). Email : ${email}`);
+      videoContainer.style.display="none";
+      thumb.style.display="none";
     }
-
-  } else {
-    authHeader.innerText = "🔒 Compte non autorisé";
-    videoContainer.style.display = "none";
-    thumb.style.display = "none";
-    loginBox.style.display = "block";
-    whatsappBtn.style.display = "inline";
-    whatsappBtn.href = "https://wa.me/2136XXXXXXX?text=" +
-      encodeURIComponent(`Bonjour, je souhaite m'abonner (200 DA). Email : ${email}`);
+  }else{
+    authHeader.innerText="🔒 Entrez vos identifiants";
+    disconnectBtn.style.display="none";
+    loginBox.style.display="block";
+    whatsappBtn.style.display="none";
+    videoContainer.style.display="none";
+    thumb.style.display="none";
+    const ami = nav.querySelector('a[href="amidan.html"]');
+    if(ami) ami.remove();
   }
-}
-
-// 🚪 Déconnexion
-disconnectBtn.addEventListener("click", () => {
-  auth.signOut().then(() => {
-    authHeader.innerText = "🔒 Entrez vos identifiants";
-    disconnectBtn.style.display = "none";
-    videoContainer.style.display = "none";
-    thumb.style.display = "none";
-    loginBox.style.display = "block";
-    whatsappBtn.style.display = "inline";
-
-    const amidan = nav.querySelector('a[href="amidan.html"]');
-    if (amidan) amidan.remove();
-  });
 });
 
-// ▶️ PLAYER
-thumb.addEventListener("click", () => {
-  thumb.style.display = "none";
-  playerBox.style.display = "block";
+// Déconnexion
+disconnectBtn.addEventListener("click",()=> auth.signOut());
 
+// Player
+thumb.addEventListener("click",()=>{
+  thumb.style.display="none";
+  playerBox.style.display="block";
   new Artplayer({
-    container: playerBox,
-    url: "https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
-    autoplay: true,
-    volume: 0.6,
-    fullscreen: true,
-    fullscreenWeb: true,
-    playsInline: true,
-    theme: "#ff0066",
-    autoSize: false,
-    aspectRatio: false
+    container:playerBox,
+    url:"https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
+    autoplay:true,
+    theme:"#ff0066"
   });
 });
 </script>
-
 </body>
 </html>
