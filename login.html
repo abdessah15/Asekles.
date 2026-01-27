@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Connexion – Asekles</title>
+<style>
+body {
+  background:#000;
+  color:#fff;
+  font-family:Arial;
+  text-align:center;
+  padding-top:100px;
+}
+input {
+  padding:10px;
+  margin:6px;
+  width:260px;
+}
+button {
+  padding:10px 20px;
+  background:#ff0066;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+}
+</style>
+</head>
+<body>
+
+<h2>🔒 Entrez vos identifiants</h2>
+
+<input id="email" type="email" placeholder="email"><br>
+<input id="password" type="password" placeholder="mot de passe"><br><br>
+
+<button id="loginBtn">Se connecter</button>
+<p id="error"></p>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
+  authDomain: "test-2fdd3.firebaseapp.com",
+  projectId: "test-2fdd3",
+  appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+loginBtn.onclick = async () => {
+  try {
+    await signInWithEmailAndPassword(auth, email.value, password.value);
+    location.href = "index.html"; // page du film
+  } catch {
+    error.innerText = "Identifiants incorrects";
+  }
+};
+</script>
+
+</body>
+</html>
