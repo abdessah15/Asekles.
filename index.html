@@ -1,89 +1,387 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Connexion – Asekles</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ⵣ Asekles - ⴰⵙⴻⴽⵍⴻⵙ ⵣ</title>
+  <link rel="icon" href="Asekles.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #f1f1f1;
+    }
 
-<style>
-body {
-  background:#000;
-  color:#fff;
-  font-family:Arial, sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
+    header {
+      background: linear-gradient(45deg, #ff0066, #6600ff);
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
 
-.box {
-  background:#111;
-  padding:30px;
-  border-radius:12px;
-  width:320px;
-  text-align:center;
-}
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      color: #fff;
+    }
 
-h2 {
-  margin-top:0;
-}
+    nav {
+      display: flex;
+      justify-content: center;
+      padding: 8px;
+      background-color: #111;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+    }
 
-input {
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:6px;
-  border:none;
-}
+    nav a {
+      color: #fff;
+      margin: 5px 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-button {
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:1em;
-}
+    nav a:hover {
+      color: #ff0066;
+    }
 
-#loginBtn {
-  background:#ff0066;
-  color:white;
-}
+    /* === MENU LANGUE === */
+    .lang-switch {
+      position: relative;
+      display: inline-block;
+    }
 
-#whatsappBtn {
-  background:#25D366;
-  color:white;
-}
+    #lang-btn {
+      background: #222;
+      color: #fff;
+      border: 2px solid #ff0066;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+    }
 
-#error {
-  color:#ff5555;
-  margin-top:10px;
-}
-</style>
+    #lang-btn:hover {
+      background: #ff0066;
+    }
+
+    .lang-menu {
+      display: none;
+      position: absolute;
+      background: #222;
+      border: 1px solid #ff0066;
+      border-radius: 8px;
+      top: 42px;
+      min-width: 8px;
+      z-index: 999;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+
+    .lang-menu a {
+      display: block;
+      padding: 10px 12px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .lang-menu a:hover {
+      background: #ff0066;
+      color: #fff;
+    }
+
+    /* === CONTENU === */
+    .content {
+      padding: 20px;
+      padding-bottom: 200px;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      padding: 10px;
+    }
+
+    .movie-item {
+      background-color: #222;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .movie-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(255, 0, 102, 0.6);
+    }
+
+    .movie-item img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .movie-item a {
+      text-decoration: none;
+      color: #ff0066;
+    }
+
+    .movie-item h3 {
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #ff0066;
+    }
+
+    /* === BOUTON DON === */
+    #don-float {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: #ff0066;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      text-decoration: none;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    #don-float img {
+      height: 24px;
+      width: auto;
+      margin-right: 8px;
+      border-radius: 4px;
+      background: white;
+      padding: 2px;
+    }
+
+    #don-float:hover {
+      background: #cc0055;
+      transform: scale(1.05);
+    }
+
+    footer {
+      background-color: #111;
+      color: #f1f1f1;
+      text-align: center;
+      padding: 8px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 600px) {
+      .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      #don-float {
+        font-size: 13px;
+        padding: 8px 12px;
+        bottom: 100px;
+        right: 10px;
+      }
+
+      #don-float img {
+        height: 20px;
+        margin-right: 6px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="box">
-  <h2> Kcem s tsarut</h2>
+  <header>
+    <h1>ⵣ Asekles - ⴰⵙⴻⴽⵍⴻⵙ ⵣ</h1>
+  </header>
 
-  <!-- 🟢 Aɣɣ-d aferwak -->
-  <button id="whatsappBtn">Aɣɣ-d aferwak</button>
+  <nav>
+    <a href="index.html">Axxam</a>
+    <a href="isura.html">Isura</a>
+    <a href="tizrarin.html">Tizrarin</a>
+  </nav>
 
-  <hr style="margin:15px 0; border-color:#333;">
+    <div class="content">
+    <h2>I kunwi d kunemti</h2>
+      <div class="movie-grid">
+      <div class="movie-item">
+        <a href="bds.html">
+          <img src="bdsa.jpg" alt="">
+          <h3>Berhuc d Salas</h3>
+        </a>
+      </div>
+      
+      <div class="movie-item">
+        <a href="amghar-aneghrum.html">
+          <img src="photo.jpg" alt="">
+          <h3>Amɣar aneɣrum</h3>
+        </a>
+      </div>
 
-  <!-- 🔐 Anekcum -->
-  <input id="email" type="email" placeholder="Isem n umiḍan">
-  <input id="password" type="password" placeholder="Tasarut">
+      <div class="movie-item">
+        <a href="imuhucen.html">
+          <img src="imuhuchen.jpg" alt="">
+          <h3>Imuḥucen</h3>
+        </a>
+      </div>
 
-  <button id="loginBtn">Kcem</button>
+      <div class="movie-item">
+        <a href="film10.html">
+          <img src="hmimi.jpg" alt="">
+          <h3>Ḥmimi d Lyes</h3>
+        </a>
+      </div>
 
-  <p id="error"></p>
-</div>
+      <div class="movie-item">
+        <a href="film1.html">
+          <img src="Sans titre2.jpg" alt="">
+          <h3>Cirta</h3>
+        </a>
+      </div>
 
+      <div class="movie-item">
+        <a href="film2.html">
+          <img src="Sans titre.jpg" alt="">
+          <h3>Amezruy n tmurt</h3>
+        </a>
+      </div>
+
+      <div class="movie-item">
+        <a href="film3.html">
+          <img src="Sans titre3.jpg" alt="">
+          <h3>Tamacahut n Wakli</h3>
+        </a>
+      </div>
+
+      <div class="movie-item">
+        <a href="film4.html">
+          <img src="Sans titre4.jpg" alt="">
+          <h3>Waɛli ak d tzizwit</h3>
+        </a>
+      </div>
+
+      <div class="movie-item">
+        <a href="film5.html">
+          <img src="Sans titre5.jpg" alt="">
+          <h3>Zorro</h3>
+        </a>
+      </div>
+
+      <div class="movie-item">
+        <a href="film8.html">
+          <img src="ikerri.jpg" alt="">
+          <h3>Ikerri izimer</h3>
+        </a>
+      </div>
+
+      <div class="movie-item">
+        <a href="film9.html">
+          <img src="IMG_1264.jpeg" alt="">
+          <h3>Targit</h3>
+        </a>
+      </div>
+
+      <div class="movie-item">
+        <a href="film7.html">
+          <img src="Sans titre11.jpg" alt="">
+          <h3>Tom et Jerry à New York</h3>
+        </a>
+      </div>
+
+  <div class="movie-item">
+        <a href="film6.html">
+          <img src="Sans titre6.jpg" alt="">
+          <h3>Maca ak d Micka</h3>
+        </a>
+      </div>
+
+  <!-- Bouton flottant DON -->
+  <a href="Don.html" id="don-float">
+    <img src="https://logowik.com/content/uploads/images/baridimob2693.logowik.com.webp" alt="BaridiMob">
+    Gred asefk
+  </a>
+
+  <footer>
+    <p>&copy; 2026 Asekles</p>
+  </footer>
+
+  <!-- SCRIPT MENU LANGUE -->
+  <script>
+    const btn = document.getElementById("lang-btn");
+    const menu = document.getElementById("lang-menu");
+    const langSwitch = document.querySelector('.lang-switch');
+    const defaultBtnText = btn.textContent;
+
+    // Ouvrir/fermer menu (toggle)
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const opened = menu.style.display === "block";
+      menu.style.display = opened ? "none" : "block";
+      langSwitch.setAttribute('aria-expanded', String(!opened));
+      menu.setAttribute('aria-hidden', String(opened));
+    });
+
+    // Empêcher la fermeture quand on clique dans le menu
+    menu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // Fermer le menu si on clique ailleurs
+    document.addEventListener('click', (e) => {
+      if (!langSwitch.contains(e.target)) {
+        menu.style.display = "none";
+        langSwitch.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    // Afficher le nom de la langue dans le bouton au survol d'un item
+    const items = menu.querySelectorAll('a');
+    items.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        // montrer le texte de l'item (utile si texte coupé ou si tu veux un "preview")
+        btn.textContent = item.textContent.trim();
+      });
+      item.addEventListener('mouseleave', () => {
+        // revenir au texte par défaut
+        btn.textContent = defaultBtnText;
+      });
+
+      // Optionnel : si l'utilisateur clique sur une langue, mettez à jour le bouton et fermez
+      item.addEventListener('click', (ev) => {
+        btn.textContent = item.textContent.trim();
+        menu.style.display = "none";
+        langSwitch.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+        // laisse le lien fonctionner normalement (navigation)
+      });
+    });
+
+    // Si l'utilisateur quitte tout le widget (touche Échap), fermer
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        menu.style.display = 'none';
+        langSwitch.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+        btn.focus();
+      }
+    });
+  </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
 /* 🔥 FIREBASE */
 const firebaseConfig = {
@@ -96,23 +394,47 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-/* 📲 WHATSAPP */
-whatsappBtn.onclick = () => {
-  const msg = `Bonjour, je souhaite acheter un abonnement Asekles (200 DA / mois).`;
-  window.open(
-    "https://wa.me/213549717754?text=" + encodeURIComponent(msg),
-    "_blank"
-  );
+/* 🎯 ELEMENTS */
+const amidanBtn = document.getElementById("amidanBtn");
+const accountBox = document.getElementById("accountBox");
+const userEmail = document.getElementById("userEmail");
+const logoutBtn = document.getElementById("logoutBtn");
+const thumb = document.getElementById("thumb");
+const playerBox = document.getElementById("player");
+
+/* 🔐 PROTECTION PAGE */
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    amidanBtn.style.display = "inline";
+    userEmail.innerText = "Connecté : " + user.email;
+  }
+});
+
+/* 👤 AMIDAN */
+amidanBtn.onclick = () => {
+  accountBox.style.display =
+    accountBox.style.display === "block" ? "none" : "block";
 };
 
-/* 🔑 LOGIN */
-loginBtn.onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, email.value, password.value);
-    window.location.href = "index.html";
-  } catch {
-    error.innerText = "Tuccḍa deg tsarut !";
-  }
+/* 🚪 LOGOUT */
+logoutBtn.onclick = async () => {
+  await signOut(auth);
+  window.location.href = "login.html";
+};
+
+/* ▶️ PLAYER */
+thumb.onclick = () => {
+  thumb.style.display = "none";
+  playerBox.style.display = "block";
+
+  new Artplayer({
+    container: playerBox,
+    url: "https://player.odycdn.com/api/v3/streams/free/tamacahut-n-wakli/3307cb145aaf559b7333b542743e72991dc46c5e/1e550e.mp4",
+    autoplay:true,
+    theme:"#ff0066"
+  });
 };
 </script>
 
