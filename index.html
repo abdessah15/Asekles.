@@ -19,10 +19,10 @@ nav a { color:#fff; text-decoration:none; font-weight:bold;}
 #loginBtn { background:#4285F4; color:white;}
 #logoutBtn { background:#555; color:white; display:none;}
 #subscribeBox a { background:#25D366; color:white; padding:10px 15px; border-radius:8px; text-decoration:none; display:inline-block; margin-top:10px;}
-.video-container { width:100%; max-width:900px; background:#000; border-radius:12px; overflow:hidden;}
-.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none;}
+.video-container { width:100%; max-width:900px; background:#000; border-radius:12px; overflow:hidden; display:none;} /* caché par défaut */
+.video-thumb { width:100%; aspect-ratio:16/9; background:url("3.png") center/cover no-repeat; cursor:pointer; position:relative; display:none;} /* caché par défaut */
 .play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:90px; height:90px; background: rgba(0,0,0,0.6); border-radius:50%;}
-.artplayer-app { width:100%; aspect-ratio:16/9; display:none;}
+.artplayer-app { width:100%; aspect-ratio:16/9; display:none;} /* caché par défaut */
 </style>
 </head>
 
@@ -39,16 +39,19 @@ nav a { color:#fff; text-decoration:none; font-weight:bold;}
 
 <div class="container">
 
-<!-- LOGIN PAR EMAIL -->
+<!-- LOGIN -->
 <div id="authBox">
-  <p id="authStatus">🔒 Entrez votre email pour accéder</p>
-  <input type="email" id="emailInput" placeholder="Votre email">
-  <button id="loginBtn">Se connecter</button>
-  <button id="logoutBtn">Se déconnecter</button>
+  <p id="authStatus">🔒 Entrez vos identifiants</p>
+  <input type="email" id="emailInput" placeholder="Email">
+  <input type="password" id="passInput" placeholder="Mot de passe">
+  <div>
+    <button id="loginBtn">Se connecter</button>
+    <button id="logoutBtn">Se déconnecter</button>
+  </div>
 
   <div id="subscribeBox" style="display:none;">
-    <p>💳 Abonnement : <strong>200 DA / mois</strong></p>
-    <a id="whatsappBtn" target="_blank">📲 S’abonner via WhatsApp</a>
+    <p>💳 Abonnement requis</p>
+    <a id="whatsappBtn" target="_blank">📲 Contacter pour abonnement</a>
   </div>
 </div>
 
@@ -65,7 +68,7 @@ nav a { color:#fff; text-decoration:none; font-weight:bold;}
 <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
 /* FIREBASE CONFIG */
 const firebaseConfig = {
@@ -76,67 +79,79 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const auth = getAuth(app);
 
-/* ELEMENTS */
+/* ÉLÉMENTS */
+const emailInput = document.getElementById("emailInput");
+const passInput = document.getElementById("passInput");
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
-const emailInput = document.getElementById("emailInput");
 const authStatus = document.getElementById("authStatus");
 const subscribeBox = document.getElementById("subscribeBox");
 const whatsappBtn = document.getElementById("whatsappBtn");
 const thumb = document.getElementById("thumb");
+const videoContainer = document.querySelector('.video-container');
 
-let currentUser = null;
-
-/* FONCTION DE VERIFICATION FIRESTORE */
-async function checkSubscription(email){
-  const ref = doc(db, "subscriptions", email);
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return false;
-  const data = snap.data();
-  if(!data.active) return false;
-  const now = new Date();
-  const expires = data.expiresAt.toDate();
-  return expires > now;
-}
-
-/* LOGIN PAR EMAIL */
+/* LOGIN */
 loginBtn.onclick = async () => {
-  const email = emailInput.value.trim().toLowerCase();
-  if(!email) return alert("Veuillez entrer votre email");
-  currentUser = email;
+  const email = emailInput.value;
+  const password = passInput.value;
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    authStatus.innerText = `Connecté : ${user.email}`;
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline";
+    emailInput.style.display = "none";
+    passInput.style.display = "none";
 
-  const isActive = await checkSubscription(email);
-
-  if(isActive){
-    authStatus.innerText = "Connecté : " + email;
+    // Afficher la vidéo
+    videoContainer.style.display = "block";
     thumb.style.display = "block";
     subscribeBox.style.display = "none";
-  } else {
-    authStatus.innerText = "🔒 Abonnement requis";
-    thumb.style.display = "none";
-    subscribeBox.style.display = "block";
-    const msg = `Bonjour, je veux m'abonner pour 200 DA. Mon email : ${email}`;
-    whatsappBtn.href = "https://wa.me/2136XXXXXXX?text=" + encodeURIComponent(msg);
-  }
 
-  loginBtn.style.display = "none";
-  logoutBtn.style.display = "inline";
-  emailInput.style.display = "none";
+  } catch(err){
+    alert("Erreur : " + err.message);
+  }
 };
 
 /* LOGOUT */
 logoutBtn.onclick = () => {
-  currentUser = null;
-  authStatus.innerText = "🔒 Entrez votre email pour accéder";
+  signOut(auth);
+  authStatus.innerText = "🔒 Entrez vos identifiants";
   loginBtn.style.display = "inline";
   logoutBtn.style.display = "none";
   emailInput.style.display = "inline";
-  emailInput.value = "";
+  passInput.style.display = "inline";
+  videoContainer.style.display = "none";
   thumb.style.display = "none";
   subscribeBox.style.display = "none";
 };
+
+/* DÉTECTION AUTOMATIQUE */
+onAuthStateChanged(auth, (user) => {
+  if(user){
+    authStatus.innerText = `Connecté : ${user.email}`;
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline";
+    emailInput.style.display = "none";
+    passInput.style.display = "none";
+
+    videoContainer.style.display = "block";
+    thumb.style.display = "block";
+    subscribeBox.style.display = "none";
+  } else {
+    authStatus.innerText = "🔒 Entrez vos identifiants";
+    loginBtn.style.display = "inline";
+    logoutBtn.style.display = "none";
+    emailInput.style.display = "inline";
+    passInput.style.display = "inline";
+
+    videoContainer.style.display = "none";
+    thumb.style.display = "none";
+    subscribeBox.style.display = "none";
+  }
+});
 
 /* VIDEO PLAYER */
 const playerBox = document.getElementById("player");
