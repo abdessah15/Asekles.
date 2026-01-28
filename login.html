@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- 📱 ESSENTIEL POUR MOBILE -->
+<!-- 📱 Mobile friendly (empêche le zoom auto) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Connexion – Asekles</title>
@@ -35,21 +35,20 @@ body {
 }
 
 h2 {
-  margin-top:0;
-  margin-bottom:15px;
+  margin:0 0 15px;
 }
 
-/* 🔐 INPUTS */
+/* 🔵 Inputs (no zoom mobile) */
 input {
   width:100%;
   padding:12px;
   margin:8px 0;
   border-radius:8px;
   border:none;
-  font-size:16px; /* 🚨 empêche le zoom */
+  font-size:16px;
 }
 
-/* 🔘 BOUTONS */
+/* 🔘 Buttons */
 button {
   width:100%;
   padding:12px;
@@ -60,13 +59,15 @@ button {
   font-size:16px;
 }
 
-#loginBtn {
-  background:#ff0066;
+/* Messenger */
+#messengerBtn {
+  background:#0084FF;
   color:white;
 }
 
-#whatsappBtn {
-  background:#25D366;
+/* Login */
+#loginBtn {
+  background:#ff0066;
   color:white;
 }
 
@@ -83,10 +84,12 @@ button {
 <div class="box">
   <h2>Kcem s tsarut</h2>
 
-  <button id="whatsappBtn">Aɣɣ-d aferwak</button>
+  <!-- 🔵 Messenger -->
+  <button id="messengerBtn">Aɣɣ-d aferwak</button>
 
   <hr style="margin:18px 0; border-color:#333;">
 
+  <!-- 🔐 Login -->
   <input id="email" type="email" placeholder="Isem n umiḍan">
   <input id="password" type="password" placeholder="Tasarut">
 
@@ -99,6 +102,7 @@ button {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
+/* 🔥 Firebase config */
 const firebaseConfig = {
   apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
   authDomain: "test-2fdd3.firebaseapp.com",
@@ -109,16 +113,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-/* 📲 WHATSAPP */
-whatsappBtn.onclick = () => {
-  const msg = "Bonjour, je souhaite acheter un abonnement Asekles (200 DA / mois).";
+/* 📩 Messenger */
+messengerBtn.onclick = () => {
+  const msg = `Bonjour 👋
+Je souhaite acheter un abonnement Asekles.
+Prix : 600 DA pour 3 mois.
+Merci de me contacter pour les détails.`;
+
   window.open(
-    "https://wa.me/213549717754?text=" + encodeURIComponent(msg),
+    "https://m.me/kherzi.abdessah.7?text=" + encodeURIComponent(msg),
     "_blank"
   );
 };
 
-/* 🔑 LOGIN */
+/* 🔑 Login */
 loginBtn.onclick = async () => {
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value);
