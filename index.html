@@ -236,7 +236,6 @@
     </div>
   </div>
 </nav>
-
     <div class="content">
     <h2>I kunwi d kunemti</h2>
       <div class="movie-grid">
@@ -330,79 +329,9 @@
           <h3>Maca ak d Micka</h3>
         </a>
       </div>
-
-  <!-- Bouton flottant DON -->
-  <a href="Don.html" id="don-float">
-    <img src="https://logowik.com/content/uploads/images/baridimob2693.logowik.com.webp" alt="BaridiMob">
-    Gred asefk
-  </a>
-
   <footer>
     <p>&copy; 2026 Asekles</p>
   </footer>
-
-  <!-- SCRIPT MENU LANGUE -->
-  <script>
-    const btn = document.getElementById("lang-btn");
-    const menu = document.getElementById("lang-menu");
-    const langSwitch = document.querySelector('.lang-switch');
-    const defaultBtnText = btn.textContent;
-
-    // Ouvrir/fermer menu (toggle)
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const opened = menu.style.display === "block";
-      menu.style.display = opened ? "none" : "block";
-      langSwitch.setAttribute('aria-expanded', String(!opened));
-      menu.setAttribute('aria-hidden', String(opened));
-    });
-
-    // Empêcher la fermeture quand on clique dans le menu
-    menu.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-
-    // Fermer le menu si on clique ailleurs
-    document.addEventListener('click', (e) => {
-      if (!langSwitch.contains(e.target)) {
-        menu.style.display = "none";
-        langSwitch.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-      }
-    });
-
-    // Afficher le nom de la langue dans le bouton au survol d'un item
-    const items = menu.querySelectorAll('a');
-    items.forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        // montrer le texte de l'item (utile si texte coupé ou si tu veux un "preview")
-        btn.textContent = item.textContent.trim();
-      });
-      item.addEventListener('mouseleave', () => {
-        // revenir au texte par défaut
-        btn.textContent = defaultBtnText;
-      });
-
-      // Optionnel : si l'utilisateur clique sur une langue, mettez à jour le bouton et fermez
-      item.addEventListener('click', (ev) => {
-        btn.textContent = item.textContent.trim();
-        menu.style.display = "none";
-        langSwitch.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        // laisse le lien fonctionner normalement (navigation)
-      });
-    });
-
-    // Si l'utilisateur quitte tout le widget (touche Échap), fermer
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        menu.style.display = 'none';
-        langSwitch.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        btn.focus();
-      }
-    });
-  </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
