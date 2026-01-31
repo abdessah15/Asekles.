@@ -7,7 +7,7 @@
 <link rel="icon" href="Asekles.png" type="image/png">
 
 <style>
-/* 🔒 cacher avant validation */
+/* 🔒 cacher avant auth */
 body {
   display: none;
   margin: 0;
@@ -168,105 +168,94 @@ footer {
   <h2>I kunwi d kunemti</h2>
 
   <div class="movie-grid">
-    <div class="movie-item">
-      <a href="bds.html">
-        <img src="bdsa.jpg">
-        <h3>Berhuc d Salas</h3>
-      </a>
-    </div>
 
-    <div class="movie-item">
-      <a href="amghar-aneghrum.html">
-        <img src="photo.jpg">
-        <h3>Amɣar aneɣrum</h3>
-      </a>
-    </div>
+    <!-- 🎬 TES FILMS (inchangés) -->
+    <div class="movie-item"><a href="bds.html"><img src="bdsa.jpg"><h3>Berhuc d Salas</h3></a></div>
+    <div class="movie-item"><a href="amghar-aneghrum.html"><img src="photo.jpg"><h3>Amɣar aneɣrum</h3></a></div>
+    <div class="movie-item"><a href="imuhucen.html"><img src="imuhuchen.jpg"><h3>Imuḥucen</h3></a></div>
+    <div class="movie-item"><a href="film10.html"><img src="hmimi.jpg"><h3>Ḥmimi d Lyes</h3></a></div>
+    <div class="movie-item"><a href="film1.html"><img src="Sans titre2.jpg"><h3>Cirta</h3></a></div>
+    <div class="movie-item"><a href="film2.html"><img src="Sans titre.jpg"><h3>Amezruy n tmurt</h3></a></div>
+    <div class="movie-item"><a href="film3.html"><img src="Sans titre3.jpg"><h3>Tamacahut n Wakli</h3></a></div>
+    <div class="movie-item"><a href="film4.html"><img src="Sans titre4.jpg"><h3>Waɛli ak d tzizwit</h3></a></div>
+    <div class="movie-item"><a href="film5.html"><img src="Sans titre5.jpg"><h3>Zorro</h3></a></div>
+    <div class="movie-item"><a href="film8.html"><img src="ikerri.jpg"><h3>Ikerri izimer</h3></a></div>
+    <div class="movie-item"><a href="film9.html"><img src="IMG_1264.jpeg"><h3>Targit</h3></a></div>
+    <div class="movie-item"><a href="film7.html"><img src="Sans titre11.jpg"><h3>Tom et Jerry à New York</h3></a></div>
+    <div class="movie-item"><a href="film6.html"><img src="Sans titre6.jpg"><h3>Maca ak d Micka</h3></a></div>
 
-    <div class="movie-item">
-      <a href="imuhucen.html">
-        <img src="imuhuchen.jpg">
-        <h3>Imuḥucen</h3>
-      </a>
-    </div>
   </div>
 </div>
 
-<footer>
-  © Asekles
-</footer>
+<footer>© Asekles</footer>
 
-<!-- 🔥 FIREBASE v8 (SMART TV OK) -->
+<!-- 🔥 FIREBASE v8 – TV OK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-  var firebaseConfig = {
-    apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
-    authDomain: "test-2fdd3.firebaseapp.com",
-    databaseURL: "https://test-2fdd3-default-rtdb.firebaseio.com",
-    projectId: "test-2fdd3",
-    appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
-  };
+var firebaseConfig = {
+  apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
+  authDomain: "test-2fdd3.firebaseapp.com",
+  databaseURL: "https://test-2fdd3-default-rtdb.firebaseio.com",
+  projectId: "test-2fdd3",
+  appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
+};
 
-  firebase.initializeApp(firebaseConfig);
-  var auth = firebase.auth();
+firebase.initializeApp(firebaseConfig);
+var auth = firebase.auth();
 
-  var amidanBtn = document.getElementById("amidanBtn");
-  var accountBox = document.getElementById("accountBox");
-  var userEmail = document.getElementById("userEmail");
-  var userExpire = document.getElementById("userExpire");
-  var logoutBtn = document.getElementById("logoutBtn");
+var amidanBtn = document.getElementById("amidanBtn");
+var accountBox = document.getElementById("accountBox");
+var userEmail = document.getElementById("userEmail");
+var userExpire = document.getElementById("userExpire");
+var logoutBtn = document.getElementById("logoutBtn");
 
-  auth.onAuthStateChanged(function(user) {
-    if (!user) {
-      window.location.replace("login.html");
+auth.onAuthStateChanged(function(user) {
+  if (!user) {
+    location.replace("login.html");
+    return;
+  }
+
+  firebase.database().ref("users/" + user.uid).once("value").then(function(snap) {
+    if (!snap.exists()) {
+      auth.signOut();
+      location.replace("login.html");
       return;
     }
 
-    var uid = user.uid;
+    var data = snap.val();
+    var today = new Date().toISOString().split("T")[0];
 
-    firebase.database().ref("users/" + uid).once("value")
-      .then(function(snapshot) {
-        if (!snapshot.exists()) {
-          auth.signOut();
-          window.location.replace("login.html");
-          return;
-        }
+    if (data.expiresAt < today) {
+      alert("Amiḍan yekfa");
+      auth.signOut();
+      location.replace("login.html");
+      return;
+    }
 
-        var data = snapshot.val();
-        var today = new Date().toISOString().split("T")[0];
-
-        if (data.expiresAt < today) {
-          alert("Amiḍan yekfa");
-          auth.signOut();
-          window.location.replace("login.html");
-          return;
-        }
-
-        /* ✅ ACCÈS AUTORISÉ */
-        document.body.style.display = "block";
-        amidanBtn.style.display = "inline";
-        userEmail.textContent = "Isem n umiḍan : " + data.email;
-        userExpire.textContent = "Azemz n tagara : " + data.expiresAt;
-      });
+    document.body.style.display = "block";
+    amidanBtn.style.display = "inline";
+    userEmail.textContent = "Isem n umiḍan : " + data.email;
+    userExpire.textContent = "Azemz n tagara : " + data.expiresAt;
   });
+});
 
-  amidanBtn.onclick = function(e) {
-    e.stopPropagation();
-    accountBox.style.display =
-      accountBox.style.display === "block" ? "none" : "block";
-  };
+amidanBtn.onclick = function(e) {
+  e.stopPropagation();
+  accountBox.style.display = accountBox.style.display === "block" ? "none" : "block";
+};
 
-  logoutBtn.onclick = function() {
-    auth.signOut().then(function() {
-      window.location.replace("login.html");
-    });
-  };
+logoutBtn.onclick = function() {
+  auth.signOut().then(function() {
+    location.replace("login.html");
+  });
+};
 
-  document.onclick = function() {
-    accountBox.style.display = "none";
-  };
+document.onclick = function() {
+  accountBox.style.display = "none";
+};
 </script>
 
 </body>
