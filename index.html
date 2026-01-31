@@ -7,7 +7,7 @@
 <link rel="icon" href="Asekles.png" type="image/png">
 
 <style>
-/* 🔒 IMPORTANT : cacher avant auth */
+/* 🔒 cacher le site avant validation */
 body {
   display: none;
   margin: 0;
@@ -155,8 +155,10 @@ footer {
 
   <div class="account-wrapper">
     <span id="amidanBtn" style="display:none;">Amiḍan</span>
+
     <div id="accountBox">
       <p id="userEmail"></p>
+      <p id="userExpire" style="color:#ffcc00;font-size:14px;"></p>
       <button id="logoutBtn">Effeɣ</button>
     </div>
   </div>
@@ -193,7 +195,7 @@ footer {
   © Asekles
 </footer>
 
-<!-- 🔥 FIREBASE TV COMPAT (v8) -->
+<!-- 🔥 FIREBASE v8 (SMART TV OK) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -202,9 +204,9 @@ footer {
   var firebaseConfig = {
     apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
     authDomain: "test-2fdd3.firebaseapp.com",
+    databaseURL: "https://test-2fdd3-default-rtdb.firebaseio.com",
     projectId: "test-2fdd3",
-    appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c",
-    databaseURL: "https://test-2fdd3-default-rtdb.firebaseio.com"
+    appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
   };
 
   firebase.initializeApp(firebaseConfig);
@@ -213,6 +215,7 @@ footer {
   var amidanBtn = document.getElementById("amidanBtn");
   var accountBox = document.getElementById("accountBox");
   var userEmail = document.getElementById("userEmail");
+  var userExpire = document.getElementById("userExpire");
   var logoutBtn = document.getElementById("logoutBtn");
 
   auth.onAuthStateChanged(function(user) {
@@ -226,7 +229,6 @@ footer {
     firebase.database().ref("users/" + uid).once("value")
       .then(function(snapshot) {
         if (!snapshot.exists()) {
-          alert("Compte non autorisé");
           auth.signOut();
           window.location.replace("login.html");
           return;
@@ -245,7 +247,8 @@ footer {
         /* ✅ ACCÈS AUTORISÉ */
         document.body.style.display = "block";
         amidanBtn.style.display = "inline";
-        userEmail.textContent = data.email;
+        userEmail.textContent = "Email : " + data.email;
+        userExpire.textContent = "Expiration : " + data.expiresAt;
       });
   });
 
