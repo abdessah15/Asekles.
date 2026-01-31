@@ -7,37 +7,13 @@
 <link rel="icon" href="Asekles.png" type="image/png">
 
 <style>
+/* 🔒 IMPORTANT : cacher avant auth */
 body {
+  display: none;
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #000;
   color: #f1f1f1;
-}
-
-/* ===== LOADER ===== */
-#loader {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid #333;
-  border-top: 4px solid #ff0066;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 15px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 /* ===== HEADER ===== */
@@ -121,6 +97,12 @@ nav a:hover,
   padding: 10px;
   border-radius: 10px;
   text-align: center;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.movie-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(255,0,102,.6);
 }
 
 .movie-item img {
@@ -150,19 +132,17 @@ footer {
   padding: 8px;
   font-size: .9em;
 }
+
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 </style>
 </head>
 
 <body>
-
-<!-- 🔄 LOADER -->
-<div id="loader">
-  <div class="spinner"></div>
-  <p>Asenqed n tsarut…</p>
-</div>
-
-<!-- 🔒 CONTENU PROTÉGÉ -->
-<div id="protectedContent" style="display:none;">
 
 <header>
   <h1>ⵣ Asekles - ⴰⵙⴻⴽⵍⴻⵙ ⵣ</h1>
@@ -184,11 +164,28 @@ footer {
 
 <div class="content">
   <h2>I kunwi d kunemti</h2>
+
   <div class="movie-grid">
+    <div class="movie-item">
+      <a href="bds.html">
+        <img src="bdsa.jpg">
+        <h3>Berhuc d Salas</h3>
+      </a>
+    </div>
 
-    <!-- (tes films inchangés) -->
-    <!-- Tu n’as RIEN à modifier ici -->
+    <div class="movie-item">
+      <a href="amghar-aneghrum.html">
+        <img src="photo.jpg">
+        <h3>Amɣar aneɣrum</h3>
+      </a>
+    </div>
 
+    <div class="movie-item">
+      <a href="imuhucen.html">
+        <img src="imuhuchen.jpg">
+        <h3>Imuḥucen</h3>
+      </a>
+    </div>
   </div>
 </div>
 
@@ -196,25 +193,23 @@ footer {
   © Asekles
 </footer>
 
-</div>
-
-<!-- 🔥 FIREBASE TV COMPAT -->
+<!-- 🔥 FIREBASE TV COMPAT (v8) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
   var firebaseConfig = {
     apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
     authDomain: "test-2fdd3.firebaseapp.com",
     projectId: "test-2fdd3",
-    appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
+    appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c",
+    databaseURL: "https://test-2fdd3-default-rtdb.firebaseio.com"
   };
 
   firebase.initializeApp(firebaseConfig);
   var auth = firebase.auth();
 
-  var loader = document.getElementById("loader");
-  var content = document.getElementById("protectedContent");
   var amidanBtn = document.getElementById("amidanBtn");
   var accountBox = document.getElementById("accountBox");
   var userEmail = document.getElementById("userEmail");
@@ -223,27 +218,50 @@ footer {
   auth.onAuthStateChanged(function(user) {
     if (!user) {
       window.location.replace("login.html");
-    } else {
-      loader.style.display = "none";
-      content.style.display = "block";
-      amidanBtn.style.display = "inline";
-      userEmail.textContent = user.email;
+      return;
     }
+
+    var uid = user.uid;
+
+    firebase.database().ref("users/" + uid).once("value")
+      .then(function(snapshot) {
+        if (!snapshot.exists()) {
+          alert("Compte non autorisé");
+          auth.signOut();
+          window.location.replace("login.html");
+          return;
+        }
+
+        var data = snapshot.val();
+        var today = new Date().toISOString().split("T")[0];
+
+        if (data.expiresAt < today) {
+          alert("Compte expiré");
+          auth.signOut();
+          window.location.replace("login.html");
+          return;
+        }
+
+        /* ✅ ACCÈS AUTORISÉ */
+        document.body.style.display = "block";
+        amidanBtn.style.display = "inline";
+        userEmail.textContent = data.email;
+      });
   });
 
-  amidanBtn.onclick = function (e) {
+  amidanBtn.onclick = function(e) {
     e.stopPropagation();
     accountBox.style.display =
       accountBox.style.display === "block" ? "none" : "block";
   };
 
-  logoutBtn.onclick = function () {
-    auth.signOut().then(function () {
+  logoutBtn.onclick = function() {
+    auth.signOut().then(function() {
       window.location.replace("login.html");
     });
   };
 
-  document.onclick = function () {
+  document.onclick = function() {
     accountBox.style.display = "none";
   };
 </script>
