@@ -98,44 +98,38 @@ button {
   <p id="error"></p>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
-/* 🔥 Firebase config */
-const firebaseConfig = {
-  apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
-  authDomain: "test-2fdd3.firebaseapp.com",
-  projectId: "test-2fdd3",
-  appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
-};
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyAX7amyQdzfssmwjIaaFl1qn0Ts5af1DCM",
+    authDomain: "test-2fdd3.firebaseapp.com",
+    projectId: "test-2fdd3",
+    appId: "1:244317844373:web:3a4e5b77c649f54d7fbc9c"
+  };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  firebase.initializeApp(firebaseConfig);
+  var auth = firebase.auth();
 
-/* 📩 Messenger */
-messengerBtn.onclick = () => {
-  const msg = `Bonjour 👋
-Je souhaite acheter un abonnement Asekles.
-Prix : 600 DA pour 3 mois.
-Merci de me contacter pour les détails.`;
+  document.getElementById("loginBtn").onclick = function () {
+    auth.signInWithEmailAndPassword(
+      document.getElementById("email").value,
+      document.getElementById("password").value
+    )
+    .then(function () {
+      window.location.href = "index.html";
+    })
+    .catch(function () {
+      document.getElementById("error").innerText = "Tuccḍa deg tsarut !";
+    });
+  };
 
-  window.open(
-    "https://m.me/kherzi.abdessah.7?text=" + encodeURIComponent(msg),
-    "_blank"
-  );
-};
-
-/* 🔑 Login */
-loginBtn.onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, email.value, password.value);
-    window.location.href = "index.html";
-  } catch {
-    error.innerText = "Tuccḍa deg tsarut !";
-  }
-};
+  document.getElementById("messengerBtn").onclick = function () {
+    window.open("https://m.me/kherzi.abdessah.7", "_blank");
+  };
 </script>
+
 
 </body>
 </html>
