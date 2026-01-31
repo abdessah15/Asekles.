@@ -7,7 +7,7 @@
 <link rel="icon" href="Asekles.png" type="image/png">
 
 <style>
-/* 🔒 cacher le site avant validation */
+/* 🔒 cacher avant validation */
 body {
   display: none;
   margin: 0;
@@ -157,9 +157,8 @@ footer {
     <span id="amidanBtn" style="display:none;">Amiḍan</span>
 
     <div id="accountBox">
-userEmail.textContent = "Isem n umiḍan : " + data.email;
-userExpire.textContent = "Azemz n tagara : " + data.expiresAt;
- style="color:#ffcc00;font-size:14px;"></p>
+      <p id="userEmail"></p>
+      <p id="userExpire" style="color:#ffcc00;font-size:14px;"></p>
       <button id="logoutBtn">Effeɣ</button>
     </div>
   </div>
@@ -239,7 +238,7 @@ userExpire.textContent = "Azemz n tagara : " + data.expiresAt;
         var today = new Date().toISOString().split("T")[0];
 
         if (data.expiresAt < today) {
-          alert("Compte expiré");
+          alert("Amiḍan yekfa");
           auth.signOut();
           window.location.replace("login.html");
           return;
@@ -248,8 +247,8 @@ userExpire.textContent = "Azemz n tagara : " + data.expiresAt;
         /* ✅ ACCÈS AUTORISÉ */
         document.body.style.display = "block";
         amidanBtn.style.display = "inline";
-        userEmail.textContent = "Email : " + data.email;
-        userExpire.textContent = "Expiration : " + data.expiresAt;
+        userEmail.textContent = "Isem n umiḍan : " + data.email;
+        userExpire.textContent = "Azemz n tagara : " + data.expiresAt;
       });
   });
 
@@ -272,4 +271,3 @@ userExpire.textContent = "Azemz n tagara : " + data.expiresAt;
 
 </body>
 </html>
-
